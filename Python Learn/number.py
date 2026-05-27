@@ -2,8 +2,7 @@ def get_int():
 #Ask to user an integer if the result isn't an integer retry the while
     while True :  
         try :
-            x = int(input("What's x ? "))
-            return x 
+            return int(input("What's x ? "))
         except ValueError:
             print("x is not an integer")
 
