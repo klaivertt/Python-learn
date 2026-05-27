@@ -1,14 +1,13 @@
-def main():
-
-    isOk = False
-
-    while not isOk :  
+def get_int():
+#Ask to user an integer if the result isn't an integer retry the while
+    while True :  
         try :
             x = int(input("What's x ? "))
+            return x 
         except ValueError:
             print("x is not an integer")
-            isOk = False
-        else:
-            print(f"x is {x}")
-            isOk = True
+
+def main():
+    print(f"x is {get_int()}")
+            
 main()
