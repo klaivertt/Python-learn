@@ -1,53 +1,47 @@
-def Choisse()
-name = input("choise one opération between, Add, Sub, Mult, Div,Mod")
-    while True
-      name = input("choise one opération ?")
-      match name:
-         case "Add" | "Sub" |"Mult"|"Div" |"Mod":
-            return name
-        case _:
-      
+def Operation():
+    while True:
+        name = input("choise one opération between, Add, Sub, Mult, Div, Mod :").strip().lower()
+        match name:
+            case "add" | "sub" | "mult" | "div" | "mod":
+                return name
+            case _:
+                print("Invalid operation")
+
+
 def GetInt(_prompt):
-   while True :  
-        try :
+    while True:
+        try:
             return int(input(_prompt))
         except ValueError:
             pass
 
-def Add(_a,_b):
-   return _a + _b
-
-def Sub(_a,_b):
-   return _a - _b
-
-def Mult(_a,_b):
-   return _a * _b
-
-def Div(_a,_b):
-   return _a / _b
-
-def Mod(_a,_b):
-   return _a % _b
 
 def main():
     x = GetInt("Choise X")
     y = GetInt("Choise Y")
-    
-   choisse = Choisse()
-   result = 0
-   match choisse:
-         case "Add":
-         result = Add(x,y)
-         case "Sub":
-          result = Sub(x,y)
-         case "Mult":
-          result = Mult(x,y)
-         case "Div":
-          result = Div(x,y)
-         case "Mod":
-          result = Mod(x,y)
+    operation = Operation()
+    result = 0
+    match operation:
+        case "Add":
+            result = x + y
+        case "Sub":
+            result = x - y
+        case "Mult":
+            result = x * y
+        case "Div":
+            if y != 0:
+               result = x / y
+            else:
+              print("You can't divide by 0")
+        case "Mod":
+            if y != 0:
+               result = x % y
+            else:
+              print("You can't divide by 0")
         case _:
-   
-   print(f"The result of your calcul is {result}")
-   
+            print("Invalid operation")
+
+    print(f"The result of your calcul is {result}")
+
+
 main()
