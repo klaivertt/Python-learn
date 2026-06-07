@@ -14,15 +14,13 @@ def GetInt(_prompt):
 def main():
     number = GetInt("Choise a number :")
     
-    print(f"{number} is enven?, {number} is: ", end="")
+    print(f"{number} is even?, {number} is: ", end="")
     result = ""
     
     if IsEven(number):
-        result = "Even"
-    else : 
-        result = "Odd"
-    
-    print(result)
+        print("Even")
+    else:
+        print("Odd")
     
     
 main()
