@@ -1,11 +1,8 @@
-def main():
-    password = ""
-    while True:
-        password = input("choise a password : ")
-        
-        print("you choise :" + password + "as password")
-        if len(password) < 8 :
+def IsValidPassword(_password):
+        print("you choise :" + _password + " as password")
+        if len(_password) < 8 :
             print("password to short")
+            return False
         else : 
             print("your password have the required length")
             
@@ -13,13 +10,13 @@ def main():
             lower = False 
             haveANumber = False
             
-            for i in range(len(password)):
+            for letter in _password:
                 
-                if(password[i].islower()):
+                if(letter.islower()):
                     lower = True
-                if(password[i].isupper()):
+                if(letter.isupper()):
                     capitalised = True
-                if(password[i].isdigit()):
+                if(letter.isdigit()):
                     haveANumber = True
                                 
                 if capitalised and lower and haveANumber:
@@ -28,9 +25,19 @@ def main():
                 
             if(capitalised and lower and haveANumber) :
                 print("your password have one capitalised letter and lower letter and a number")
-                break
+                return True
             else :
-                 print("your password miss one capitalised letter or lower letter or a number")
+                print("your password miss one capitalised letter or lower letter or a number")
+                return False
+    
+      
+def main():
+    password = ""
+    while True:
+        password = input("choise a password : ")
+        if IsValidPassword(password):
+            break
+        
     print("your password is availlable")
 
 main()
