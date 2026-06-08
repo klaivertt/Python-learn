@@ -22,9 +22,6 @@ def WordCounter(_str):
     return wordDic
         
         
-        
-        
-
 def main():
     nbWorld = 0
     sentences = input("Write a text :").strip().lower()
