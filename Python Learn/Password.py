@@ -19,7 +19,6 @@ def main():
                     lower = True
                 if(password[i].isupper()):
                     capitalised = True
-                    lower = True
                 if(password[i].isdigit()):
                     haveANumber = True
                                 
