@@ -23,7 +23,6 @@ def WordCounter(_str):
         
         
 def main():
-    nbWorld = 0
     sentences = input("Write a text :").strip().lower()
     
     dictionary =  WordCounter(sentences)
