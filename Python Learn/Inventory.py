@@ -4,8 +4,8 @@ def LoadItem():
     loot = []
     for _ in range(random.randint(1, 40)) :
         
-        rng = random.randint(0,3)
-        print(rng)
+        rng = random.randint(0,2)
+        # print(rng)
         if rng == 2 :
             loot.append("wood")
         elif rng == 1:
@@ -32,8 +32,17 @@ def main() :
     
     inventory = CountInvetory(loot)
     
+    key = ""
     for item in inventory :
+        if key == "" :
+            key = item
+        elif inventory[item] > inventory[key] :
+            key = item  
+        
         print(item, inventory[item])
+        
+    #most collected resource
+    print ("Most collected ressource :", key, inventory[key])
         
         
 main()
