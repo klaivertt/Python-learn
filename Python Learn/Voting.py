@@ -67,7 +67,7 @@ def main():
     for candidate in vote:
         if vote[candidate] >  maxVote: 
             maxVote = vote[candidate]
-        
+            winners = [candidate]
         if vote[candidate] == maxVote:            
             winners.append(candidate)
             

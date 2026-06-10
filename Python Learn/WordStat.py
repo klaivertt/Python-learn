@@ -28,13 +28,16 @@ def main():
 
     dictionary = WordCounter("Hello world hello test hello")
 
-    key = ""
+    words = []
+    countMaxWord = 0
     nbWord = 0
     for word in dictionary:
-        if key == "":
-            key = word
-        elif dictionary[word] > dictionary[key]:
-            key = word
+        if dictionary[word] >  countMaxWord: 
+            countMaxWord = dictionary[word]
+            words = [word]
+        
+        if dictionary[word] == countMaxWord:            
+            words.append(word)
 
         nbWord += 1
 
@@ -42,7 +45,10 @@ def main():
 
     print("number of word :", len(nbWord))
     print("unique word :", len(dictionary))
-    print("most frequent world :", key)
+    
+    print("most frequent world :")
+    for word in words:
+        print(word, dictionary[word])
 
 
 main()
