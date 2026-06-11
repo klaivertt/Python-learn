@@ -42,3 +42,5 @@ Thumbs.db
 
 # Logs
 *.log
+Python Learn/count_py_lines.sh
+Python Learn/py_lines_report.txt
