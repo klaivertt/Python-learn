@@ -15,12 +15,12 @@ def CreateItem(_gameData):
     while True:
         choice = input("Do you want create an item? Yes or No: ").strip().lower()
         
-        if choice == "Yes" or choice == "No":
+        if choice == "yes" or choice == "no":
             break
         else :
             print("Please enter 'Yes' or 'No'")
     
-    if choice == "No":
+    if choice == "no":
         return
     
     name = input("Please enter a name for your item : ").strip().lower()
@@ -54,18 +54,24 @@ def RemoveItem(_gameData):
     DisplayItem(_gameData)
     
     while True:
-        print("if you want cancer please enter 'cancel'")
+        print("if you want cancel please enter 'cancel'")
+        print("if you remove an item this item is removed in your inventory to")
         itemName = input("Name of item you want to remove :").strip().lower()
         
         if itemName == "cancel":
             return
         
         if itemName in _gameData["item"]:
-            del  _gameData["item"].remove(itemName)
+            _gameData["item"].remove(itemName)
+            
+            if itemName in _gameData["inventory"]:
+               del _gameData["inventory"][itemName]
+            break
         else:
             print("Item doesn't Existe")
     
 def DisplayItem(_gameData):
+    print()
     print("Existing Item")
     print("--------------------------------------")
     for item in _gameData["item"]:
@@ -79,17 +85,17 @@ def CreateCraft(_gameData):
     while True:
         choice = input("Do you want create an Craft? Yes or No: ").strip().lower()
         
-        if choice == "Yes" or choice == "No":
+        if choice == "yes" or choice == "no":
             break
         else :
             print("Please enter 'Yes' or 'No'")
     
-    if choice == "No":
+    if choice == "no":
         return
     
     recipeName = None
     while True:
-        recipeName = input("Chose a name for your craft").strip().lower()
+        recipeName = input("Chose a name for your craft : ").strip().lower()
         
         print(f"{recipeName} , confirm your craft name")
         print("'Yes' or 'No'")
@@ -105,6 +111,7 @@ def CreateCraft(_gameData):
     craft = {}
     
     while True:
+        print()
         print("If you want cancel tape 'Cancel' if your craft is done tape 'Done'")
         print(f"What item you want in your craft: {recipeName}")
         
@@ -122,9 +129,9 @@ def CreateCraft(_gameData):
                 if valid == "yes":
                     craft[itemName] += nb
             else :
-                valid = input("Enter your choice :").strip().lower()
                 print(f"Do you want add this quantity {nb} of {itemName} in your craft")
                 print("'Yes' or 'No'")
+                valid = input("Enter your choice :").strip().lower()
                  
                 if valid == "yes":
                     craft[itemName] = nb
@@ -135,31 +142,47 @@ def CreateCraft(_gameData):
         else:
             print("this item doesn't exist")
     
-    resultItem = None    
+    craft["result"] = {} 
     while True:
-        resultItem = input(f"Item you want for result of {recipeName} : ").strip().lower()
-        
-        if resultItem in _gameData["item"]:
-            break
-        else:
-            print("Please enter an valid item name")
+        resultItem = None    
+        while True:
+            resultItem = input(f"Item you want for result of {recipeName} : ").strip().lower()
+            
+            if resultItem in _gameData["item"]:
+                break
+            else:
+                print("Please enter an valid item name")
     
-    nbResultItem = GetInt(f"How you want {resultItem} for your craft :")
-    craft["result"] = {resultItem : nbResultItem}
+        nbResultItem = GetInt(f"How many {resultItem} do you want : ")
+        craft["result"][resultItem] = nbResultItem
+    
+        while True:
+            addAnother = input("Do you want to add another item? Yes or No : ").strip().lower()
+        
+            if addAnother == "yes" or addAnother == "no":
+                break
+            else:
+                print("Please enter 'Yes' or 'No'")
+    
+        if addAnother == "no":
+            break
+
     _gameData["recipes"][recipeName] = craft
+    
 
 def RemoveCraft(_gameData ):
     print()
     print("--------------------------------------")
     print("Delete an existing Craft")
     
-    DisplayItem(_gameData)
+    DisplayCraft(_gameData)
     
     name = None
     isvalid = False
     while not isvalid:
+        print()
         print("if you want cancel enter 'Cancel'")
-        name = input("choise an craft to remove it : ")
+        name = input("choose an craft to remove it : ").strip().lower()
         
         if name in _gameData["recipes"]:
             while True:
@@ -179,7 +202,22 @@ def RemoveCraft(_gameData ):
             print("Please enter an valid item name")
     
     del _gameData["recipes"][name]
-            
+    
+def DisplayCraft(_gameData):
+    print()
+    print("Display Craft")
+    print("--------------------------------------")
+    for recipe in _gameData["recipes"]:
+        print("Craft name :",recipe)
+        print("item required")
+        for item in _gameData["recipes"][recipe]:
+            if item != "result":
+                print(item, ":", _gameData["recipes"][recipe][item])
+        
+        print("Result:")
+        for resultItem, resultQuantity in _gameData["recipes"][recipe]["result"].items():
+                    print(f"  {resultItem}: {resultQuantity}")
+        
          
 
 def Craft(_gameData):
@@ -187,62 +225,183 @@ def Craft(_gameData):
     print("--------------------------------------")
     print("What item you want to craft ?")
     
-    DisplayItem(_gameData)
+    DisplayCraft(_gameData)
     DisplayInventory(_gameData)
     
     craftName = None 
     while True:
-        craftName = input("Enter the craft name : ")
+        print()
+        craftName = input("Enter the craft name : ").strip().lower()
         
         if craftName in _gameData["recipes"]:
             break
         else:
             print("Please enter an valid Craft name")
     
+    print()
     print(f"To craft {craftName} you need :")
     for item in _gameData["recipes"][craftName]:
-        print(item, ":", _gameData["recipes"][craftName][item])
+        if item != "result":
+            print(item, ":", _gameData["recipes"][craftName][item])
     
+    print()
     for item in _gameData["recipes"][craftName]:
-        if item in _gameData["inventory"]:
-            print(f"You have {item} : {_gameData["inventory"][item]} in your inventory")
-    
+        if item != "result":
+        
+            if item in _gameData["inventory"]:
+                print(f"You have {item} : {_gameData['inventory'][item]} in your inventory")
+    choice = None
     while True:
+        print()
         choice = input(f"Do you want Craft {craftName}? Yes or No: ").strip().lower()
          
         if choice == "yes" or choice == "no":
             break
         else :
             print("Please enter 'Yes' or 'No'")
-    craftValid = True
+            
+    if choice == "no":
+        return
     
+    
+    craftValid = True
     for item in _gameData["recipes"][craftName]:
-        if _gameData["recipes"][craftName][item] > _gameData["inventory"][item]:
-            craftValid = False
+        if item != "result":
+            if item in _gameData["inventory"] :
+                if _gameData["recipes"][craftName][item] > _gameData["inventory"][item]:
+                    craftValid = False
+                    break
+            else:
+                break
    
     if craftValid:
         for item in _gameData["recipes"][craftName]:
-           _gameData["inventory"][item] -= _gameData["recipes"][craftName][item]
-           print(f"{_gameData["recipes"][craftName][item]} {item} are removed ")
+            if item != "result":
+                if item in _gameData["inventory"] :
+                    _gameData["inventory"][item] -= _gameData["recipes"][craftName][item]
+                    
+                    if _gameData["inventory"][item] <= 0:
+                        del _gameData["inventory"][item]
+                
+                    print(f"{_gameData['recipes'][craftName][item]} {item} are removed ")
     else:
         print("You don't have enough resources")
         return
     
-    if _gameData["recipes"][craftName]["result"] in _gameData["inventory"] :
-        _gameData["inventory"][_gameData["recipes"][craftName]["result"]] += _gameData["recipes"][craftName]["result"][]
-    else:
-        _gameData["inventory"][_gameData["recipes"][craftName]["result"]] = 1
-        
+    for finalItem in _gameData["recipes"][craftName]["result"]:
+        if  finalItem in _gameData["inventory"] :
+            _gameData["inventory"][finalItem] += _gameData["recipes"][craftName]["result"][finalItem]
+        else:
+             _gameData["inventory"][finalItem] = _gameData["recipes"][craftName]["result"][finalItem]
+            
     print(f"{craftName} are added to your inventory")
-        
-    
         
 
 def DisplayInventory(_gameData):
+    print()
+    print("Display Inventory")
+    print("--------------------------------------")
     for item in _gameData["inventory"]:
         print(item, ":", _gameData["inventory"][item])
+        
+    if not _gameData["inventory"]:
+        print("Your inventory is empty")
     
+    print("Inventory display complete")
+
+def AddItemInventory(_gameData):
+    print()
+    print("Add Item in Inventory")
+    print("--------------------------------------")
+    
+    DisplayItem(_gameData)
+    
+    item = None    
+    while True:
+        print()
+        print("If you want cancel tape 'Cancel'")
+        item = input("Choose an item to add in your inventory : ").strip().lower()
+        if item == "cancel":
+            return
+        elif item in _gameData["item"]:
+            break
+        else:
+            print("Please choose an valid item")
+    
+    print(f"Do you want add this item: {item} in your inventory?")
+    
+    choice = None
+    while True:
+        choice = input("'Yes' or 'No' ? ").strip().lower()
+        
+        if choice == "yes" or choice == "no":
+            break
+        else:
+            print("Please enter 'Yes' or 'No'")
+    
+    if choice == "no":
+        return
+    
+    nb = GetInt(f"Choose a quantity of {item} you want to add in your inventory : ")
+    
+    if item in _gameData["inventory"]:
+        _gameData["inventory"][item] += nb
+    else:
+        _gameData["inventory"][item] = nb
+    
+    print(f"{nb} {item} was added in your inventory")
+    print(f"You have {_gameData['inventory'][item]} {item}")
+
+def RemoveItemInventory(_gameData):
+    print()
+    print("Remove Item in Inventory")
+    print("--------------------------------------")
+    
+    DisplayItem(_gameData)
+    
+    while True:
+        print("If you want cancel tape 'Cancel'")
+        item = input("Choose an item to remove in your inventory : ").strip().lower()
+        
+        if item == "cancel":
+            return
+        elif  item in _gameData["item"]:
+            break
+        else:
+            print("Please choose an valid item")
+    
+    if item not in _gameData["inventory"]:
+        print(f"This item:{item} wasn't present in your inventory")
+        return
+    
+    print(f"Do you want remove this item: {item} of your inventory?")
+    
+    choice = None
+    while True:
+        choice = input("'Yes' or 'No' ? ").strip().lower()
+        
+        if choice == "yes" or choice == "no":
+            break
+        else:
+            print("Please enter 'Yes' or 'No'")
+    
+    if choice == "no":
+        return
+    
+    nb = GetInt(f"Choose a quantity of {item} you want to remove in your inventory : ")
+    
+    if item in _gameData["inventory"]:
+        _gameData["inventory"][item] -= nb
+        if _gameData["inventory"][item] <= 0:
+            del _gameData["inventory"][item]  
+            print(f"{item} was removed of your inventory")
+        else:
+            print(f"{nb} {item} was removed of your inventory")
+            print(f"You have {_gameData['inventory'][item]} {item}")
+    
+
 def GetMenuAction(_menu, _str):
+    print()
     print("Navigate into menu choice:")
     for menu in _menu:
         print(menu, " | ", end="")
@@ -254,6 +413,7 @@ def GetMenuAction(_menu, _str):
             return choisse
         else:
             print("Name of menu unknown please retry")
+
 
 def main():
     gameData = {
@@ -269,6 +429,8 @@ def main():
         "create craft": CreateCraft,
         "remove craft": RemoveCraft,
         "display inventory": DisplayInventory,
+        "add item": AddItemInventory,
+        "remove item inventory": RemoveItemInventory,
         "craft" : Craft,
         "quit" : None
     }
@@ -282,9 +444,8 @@ def main():
         
         if choice == "quit":
             break
-        
-        if choice in menuAction:
+        elif choice in menuAction:
             menuAction[choice](gameData)
     
     
-        
+main()
