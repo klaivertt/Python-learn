@@ -5,7 +5,6 @@ def GetInt(_str):
         except ValueError:
             print("Enter an valid Int")
 
-
 def AddItem(_inventory):
 
     choice = None
