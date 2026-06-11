@@ -1,5 +1,3 @@
-existingItem = []
-
 def GetInt(_str):
     while True:
         try:
@@ -25,24 +23,24 @@ def AddItem(_inventory):
 
     if choice == "create":
         name = input("Choisse a name : ").strip().lower()
-        if name in existingItem:
+        if name in _inventory:
             print(f"This item name : {name.title()} already exist")
         else:
-            existingItem.append(name)
+            _inventory.append(name)
+            nb = GetInt(f"Enter number of {name.title()} you want in your Inventory :")
+            _inventory[name] = nb
 
-        nb = GetInt(f"Enter number of {name.title()} you want in your Inventory :")
 
-        _inventory[name] = nb
     elif choice == "add":
 
         while True:
             print("choose item in")
-            for item in existingItem:
+            for item in _inventory:
                 print(item.title())
 
             name = input("Choisse a item : ").strip().lower()
 
-            if name in existingItem:
+            if name in _inventory:
                 break
             else:
                 print("item doesn't exist")
@@ -60,12 +58,12 @@ def RemoveItem(_inventory):
     name = ""
     while True:
         print("choose item in")
-        for item in existingItem:
+        for item in _inventory:
             print(item.title())
 
         name = input("Choisse a item : ").strip().lower()
 
-        if name in existingItem:
+        if name in _inventory:
             break
         else:
             print("item doesn't exist")
@@ -97,12 +95,12 @@ def SearchItem(_inventory):
     name = ""
     while True:
         print("choose item in")
-        for item in existingItem:
+        for item in _inventory:
             print(str(item).title())
 
         name = input("Choisse a item : ").strip().lower()
 
-        if name in existingItem:
+        if name in _inventory:
             break
         else:
             print("item doesn't exist")
