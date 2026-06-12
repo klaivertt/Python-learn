@@ -5,6 +5,15 @@ def GetInt(_str):
         except ValueError:
             print("Enter an valid Int")
 
+def YesNo(_str):
+    while True:
+        choice = input(_str).strip().lower()
+        
+        if choice == "yes" or choice == "no":
+            return choice
+        else :
+            print("Please enter 'Yes' or 'No'")    
+
 def CreateItem(_gameData):
     choice = None
     
@@ -12,13 +21,9 @@ def CreateItem(_gameData):
     print("--------------------------------------")
     print("Create new Item")
     
-    while True:
-        choice = input("Do you want create an item? Yes or No: ").strip().lower()
-        
-        if choice == "yes" or choice == "no":
-            break
-        else :
-            print("Please enter 'Yes' or 'No'")
+    DisplayInventory(_gameData)
+    
+    choice = YesNo("Do you want create an item? Yes or No: ")      
     
     if choice == "no":
         return
@@ -39,13 +44,9 @@ def RemoveItem(_gameData):
     print("--------------------------------------")
     print("Delete an existing Item")
     
-    while True:
-        choice = input("Do you want delete an item? Yes or No: ").strip().lower()
-         
-        if choice == "yes" or choice == "no":
-            break
-        else :
-            print("Please enter 'Yes' or 'No'")
+    DisplayInventory(_gameData)
+    
+    choice = YesNo("Do you want delete an item? Yes or No: ")
         
     if choice == "no":
         return
@@ -82,14 +83,8 @@ def CreateCraft(_gameData):
     print("--------------------------------------")
     print("Create a craft")
     
-    while True:
-        choice = input("Do you want create an Craft? Yes or No: ").strip().lower()
+    choice = YesNo("Do you want create an Craft? Yes or No: ")
         
-        if choice == "yes" or choice == "no":
-            break
-        else :
-            print("Please enter 'Yes' or 'No'")
-    
     if choice == "no":
         return
     
@@ -97,14 +92,10 @@ def CreateCraft(_gameData):
     while True:
         recipeName = input("Chose a name for your craft : ").strip().lower()
         
-        print(f"{recipeName} , confirm your craft name")
-        print("'Yes' or 'No'")
-        
-        valid = input("Enter your choice :").strip().lower()
+        valid = YesNo(f"{recipeName} , confirm your craft name. 'Yes' or 'No'")
         
         if valid == "yes":
             break
-           
     
     DisplayItem(_gameData)
     
@@ -122,16 +113,15 @@ def CreateCraft(_gameData):
             if itemName in craft :
                 print(f"this item is already in your craft")
                 print(f"Do you want add this quantity {nb} of {itemName} in your craft")
-                print("'Yes' or 'No'")
-                
-                valid = input("Enter your choice :").strip().lower()
+                                
+                valid = YesNo("Enter your choice 'Yes' or 'No':")
                 
                 if valid == "yes":
                     craft[itemName] += nb
             else :
                 print(f"Do you want add this quantity {nb} of {itemName} in your craft")
-                print("'Yes' or 'No'")
-                valid = input("Enter your choice :").strip().lower()
+                
+                valid = YesNo("Do you want add this item? 'Yes' or 'No'")
                  
                 if valid == "yes":
                     craft[itemName] = nb
@@ -156,19 +146,12 @@ def CreateCraft(_gameData):
         nbResultItem = GetInt(f"How many {resultItem} do you want : ")
         craft["result"][resultItem] = nbResultItem
     
-        while True:
-            addAnother = input("Do you want to add another item? Yes or No : ").strip().lower()
-        
-            if addAnother == "yes" or addAnother == "no":
-                break
-            else:
-                print("Please enter 'Yes' or 'No'")
+        addAnother = YesNo("Do you want to add another item? Yes or No : ")       
     
         if addAnother == "no":
             break
 
     _gameData["recipes"][recipeName] = craft
-    
 
 def RemoveCraft(_gameData ):
     print()
@@ -185,17 +168,14 @@ def RemoveCraft(_gameData ):
         name = input("choose an craft to remove it : ").strip().lower()
         
         if name in _gameData["recipes"]:
-            while True:
                 print(f"Do you want to remove this craft {name}, 'Yes' or 'No'")
-                choice = input("Enter your choice :").strip().lower()
+                choice = YesNo("Enter your choice :")
                 
                 if choice == "no":
                     return
-                elif choice == "yes":
+                else:
                     isvalid = True
                     break
-                else:
-                    print("Please enter 'Yes' or 'No'")
         elif name == "cancel":
             return            
         else:
@@ -251,18 +231,12 @@ def Craft(_gameData):
             if item in _gameData["inventory"]:
                 print(f"You have {item} : {_gameData['inventory'][item]} in your inventory")
     choice = None
-    while True:
-        print()
-        choice = input(f"Do you want Craft {craftName}? Yes or No: ").strip().lower()
-         
-        if choice == "yes" or choice == "no":
-            break
-        else :
-            print("Please enter 'Yes' or 'No'")
+    
+    print()
+    choice = YesNo(f"Do you want Craft {craftName}? Yes or No: ")
             
     if choice == "no":
-        return
-    
+        return    
     
     craftValid = True
     for item in _gameData["recipes"][craftName]:
@@ -330,14 +304,7 @@ def AddItemInventory(_gameData):
     
     print(f"Do you want add this item: {item} in your inventory?")
     
-    choice = None
-    while True:
-        choice = input("'Yes' or 'No' ? ").strip().lower()
-        
-        if choice == "yes" or choice == "no":
-            break
-        else:
-            print("Please enter 'Yes' or 'No'")
+    choice = YesNo("'Yes' or 'No' ? ")
     
     if choice == "no":
         return
@@ -376,14 +343,7 @@ def RemoveItemInventory(_gameData):
     
     print(f"Do you want remove this item: {item} of your inventory?")
     
-    choice = None
-    while True:
-        choice = input("'Yes' or 'No' ? ").strip().lower()
-        
-        if choice == "yes" or choice == "no":
-            break
-        else:
-            print("Please enter 'Yes' or 'No'")
+    choice = YesNo("'Yes' or 'No' ? ")
     
     if choice == "no":
         return
