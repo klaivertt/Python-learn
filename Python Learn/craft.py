@@ -14,12 +14,17 @@ def YesNo(_str):
         else :
             print("Please enter 'Yes' or 'No'")    
 
+def Title(_str):
+    print()
+    print("--------------------------------------")
+    print(_str)
+    print("--------------------------------------")
+    print()
+
 def CreateItem(_gameData):
     choice = None
     
-    print()
-    print("--------------------------------------")
-    print("Create new Item")
+    Title("Create new Item")
     
     DisplayInventory(_gameData)
     
@@ -40,9 +45,7 @@ def CreateItem(_gameData):
 def RemoveItem(_gameData):
     choice = None
     
-    print()
-    print("--------------------------------------")
-    print("Delete an existing Item")
+    Title("Delete an existing Item")
     
     DisplayInventory(_gameData)
     
@@ -72,16 +75,12 @@ def RemoveItem(_gameData):
             print("Item doesn't Existe")
     
 def DisplayItem(_gameData):
-    print()
-    print("Existing Item")
-    print("--------------------------------------")
+    Title("Existing Item")
     for item in _gameData["item"]:
         print(item)
 
 def CreateCraft(_gameData):
-    print()
-    print("--------------------------------------")
-    print("Create a craft")
+    Title("Create a craft")
     
     choice = YesNo("Do you want create an Craft? Yes or No: ")
         
@@ -154,9 +153,7 @@ def CreateCraft(_gameData):
     _gameData["recipes"][recipeName] = craft
 
 def RemoveCraft(_gameData ):
-    print()
-    print("--------------------------------------")
-    print("Delete an existing Craft")
+    Title("Delete an existing Craft")
     
     DisplayCraft(_gameData)
     
@@ -184,9 +181,7 @@ def RemoveCraft(_gameData ):
     del _gameData["recipes"][name]
     
 def DisplayCraft(_gameData):
-    print()
-    print("Display Craft")
-    print("--------------------------------------")
+    Title("Display Craft")
     for recipe in _gameData["recipes"]:
         print("Craft name :",recipe)
         print("item required")
@@ -201,9 +196,7 @@ def DisplayCraft(_gameData):
          
 
 def Craft(_gameData):
-    print()
-    print("--------------------------------------")
-    print("What item you want to craft ?")
+    Title("What item you want to craft ?")
     
     DisplayCraft(_gameData)
     DisplayInventory(_gameData)
@@ -272,9 +265,7 @@ def Craft(_gameData):
         
 
 def DisplayInventory(_gameData):
-    print()
-    print("Display Inventory")
-    print("--------------------------------------")
+    Title("Display Inventory")
     for item in _gameData["inventory"]:
         print(item, ":", _gameData["inventory"][item])
         
@@ -284,9 +275,7 @@ def DisplayInventory(_gameData):
     print("Inventory display complete")
 
 def AddItemInventory(_gameData):
-    print()
-    print("Add Item in Inventory")
-    print("--------------------------------------")
+    Title("Add Item in Inventory")
     
     DisplayItem(_gameData)
     
@@ -320,9 +309,7 @@ def AddItemInventory(_gameData):
     print(f"You have {_gameData['inventory'][item]} {item}")
 
 def RemoveItemInventory(_gameData):
-    print()
-    print("Remove Item in Inventory")
-    print("--------------------------------------")
+    Title("Remove Item in Inventory")
     
     DisplayItem(_gameData)
     
