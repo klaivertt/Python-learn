@@ -1,0 +1,8 @@
+A Python Environment has been configured.  
+Following is the information about the Python environment:
+1. Environment Type: system
+2. Version: 3.11.9.final.0
+
+3. Command Prefix to run Python in a terminal is: `C:/Users/User/AppData/Local/Microsoft/WindowsApps/python3.11.exe`
+Instead of running `Python sample.py` in the terminal, you will now run: `C:/Users/User/AppData/Local/Microsoft/WindowsApps/python3.11.exe sample.py`
+Similarly instead of running `Python -c "import sys;...."` in the terminal, you will now run: `C:/Users/User/AppData/Local/Microsoft/WindowsApps/python3.11.exe -c "import sys;...."`
