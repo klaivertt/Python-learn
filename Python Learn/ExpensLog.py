@@ -26,13 +26,10 @@ def ReadFiles(_fileName):
         read = csv.reader(file)
         
              
-        for row in read:
-            print(row)
-            
         total = 0
-
-        for row in read:   
-            total += float(row[1])
+        for row in read:
+            print(f"Category {row[0]}: {row[1]}")   
+            total += float(row[1])    
 
         print(f"Total des dépenses : {total}")
         
