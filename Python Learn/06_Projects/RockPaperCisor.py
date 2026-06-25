@@ -1,5 +1,9 @@
-import random
 import csv
+import random
+from pathlib import Path
+
+
+DATA_FILE = Path(__file__).with_name("RPC_Robot.csv")
 
 class Player:
     
@@ -26,7 +30,7 @@ class Robot:
         self.playerChoice = {"rock" : 1, "paper" : 1, "cisor" : 1}
         
         try:
-            with open("RPC_Robot.csv", "r") as file:
+            with open(DATA_FILE, "r") as file:
                 read = csv.reader(file)
             
                 for row in read:
@@ -48,7 +52,7 @@ class Robot:
     def Analyse(self, _choice):
         self.playerChoice[_choice] += 1
         
-        with open("RPC_Robot.csv", "w", newline="", encoding="utf-8") as file:
+        with open(DATA_FILE, "w", newline="", encoding="utf-8") as file:
             writer = csv.writer(file)
             for line in self.playerChoice:
                 writer.writerow([line, self.playerChoice[line]])

@@ -1,4 +1,10 @@
-def ReadTextFile(_filePath="Ligne.txt"):
+from pathlib import Path
+
+
+def ReadTextFile(_filePath=None):
+    if _filePath is None:
+        _filePath = Path(__file__).with_name("Ligne.txt")
+
     try:
         with open(_filePath, "r") as file:
             return file.read()

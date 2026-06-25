@@ -1,0 +1,28 @@
+Rapport de lignes des fichiers Python
+Racine : .
+
+./calculator.py : 47
+./compare.py : 12
+./counting.py : 32
+./craft.py : 450
+./Even.py : 25
+./FizzBuzz.py : 14
+./guess.py : 34
+./house.py : 10
+./Inventory.py : 47
+./InventoryManagementSystem.py : 147
+./letterCounter.py : 21
+./main.py : 4
+./MostFrequent.py : 39
+./number.py : 12
+./NumbStat.py : 85
+./palindrome.py : 20
+./Password.py : 42
+./ReverseWord.py : 10
+./Table.py : 18
+./timeConverter.py : 36
+./todo.py : 98
+./Voting.py : 84
+./WordStat.py : 54
+
+Total : 1341

@@ -64,7 +64,12 @@ class Player:
     
     def PlayerChoice(self):
         while True:
-            choice = input("Choose an action between : 'Hit' | 'Stand' : ")
+            choice = input("Choose an action between : 'Hit' | 'Stand' : ").strip().lower()
+            
+            if choice == "hit" or choice == "stand":
+                return choice
+            else:
+                print("Please enter : 'Hit' or 'stand'")
     
     def SetScore(self, _nb):
         self.score = _nb
@@ -82,7 +87,10 @@ class Dealer:
         for card in _card:
             self.card.append(card)
             
-        print(self.card) 
+        # print(self.card) 
+        
+    def GetHand(self):
+        return self.card
 
 def CalculateScore(_cards):
     
@@ -97,8 +105,8 @@ def CalculateScore(_cards):
     
     return score
     
-        
-def CreateDeck():
+# here _nb correspond to number of deck you want in your game
+def CreateDeck(_nb = 1):
     suits = ["Heart", "Diamond", "Club", "Spade"]
 
     ranks = [
@@ -109,14 +117,15 @@ def CreateDeck():
     
     deck = []
     
-    for suit in suits:
-        for rank in ranks:
-            deck.append((suit,rank))
-            # print(f"Card created : {rank} {suit}")
-            
+    for _ in range(_nb):    
+        for suit in suits:
+            for rank in ranks:
+                deck.append((suit,rank))
+                # print(f"Card created : {rank} {suit}")
+                
     return deck
 
-def Distribute(_deck, _nb):
+def Distribute(_deck, _nb = 1):
     
     hand = []
     
@@ -126,14 +135,14 @@ def Distribute(_deck, _nb):
                 
         hand.append(card)
         
-    print(hand)
+    # print(hand)
     return hand
 
 def main():
     
     inGame = True
     while inGame:
-        deck = CreateDeck()
+        deck = CreateDeck(6)
         random.shuffle(deck)
     
         player = Player()
@@ -146,16 +155,26 @@ def main():
             player.DisplayHand()
             score = CalculateScore(player.GetHand())
             print(f"Player score = {score}")
-            player.SetFinishedTurn(True)
-    
-        break
+            if player.PlayerChoice() == 'Hit':
+                player.AddCard(Distribute(deck))
+            else:
+                player.SetFinishedTurn(True)
+        
+        while CalculateScore(dealer.)
+        
+        while True:
+            choice = input("Do you want restart or quit ? 'r' for restart | 'q' for quit")
+            
+            if choice == 'r' or choice == 'q':
+                break
+            else :
+                print("Please enter 'r' or 'q'")
+        
+        # quit flag
+        if choice == 'r':
+            break
         
         
-        
-    
-    
-    
-    
 
 if __name__ in "__main__":
     main()

@@ -1,4 +1,5 @@
-import csv 
+import csv
+from pathlib import Path
 
 def GetInt(_str):
     while True:
@@ -48,7 +49,7 @@ def MenuChoise():
             
 
 def main():
-    filePath = "ExpensLog.csv"
+    filePath = Path(__file__).with_name("ExpensLog.csv")
     while True:
         menu = MenuChoise()
         
