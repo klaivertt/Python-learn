@@ -1,25 +1,3 @@
-
-
-# Tant que le joueur joue :
-#     Afficher les mains
-#     Demander Hit ou Stand
-
-#     Si Hit :
-#         Ajouter une carte
-
-#     Si score > 21 :
-#         Défaite
-#         Fin
-
-# Tour du croupier
-
-# Tant que score croupier < 17 :
-#     Piocher
-
-# Comparer les scores
-
-# Afficher le résultat
-
 import random
 
 CARD_VALUES = {
@@ -42,7 +20,7 @@ class Player:
     
     def __init__(self):
         self.card = []
-        self.finishedTurn = False
+        self.finishedTurn = True
         self.score = 0
         
     def AddCard(self, _card):
@@ -53,10 +31,12 @@ class Player:
         # print(self.card)      
         
     def DisplayHand(self):
+        print("Player hands :")
         for card in self.card:
             print(card[1], card[0])
             
     def GetFinishedTurn(self):
+        print(self.finishedTurn)
         return self.finishedTurn
     
     def SetFinishedTurn(self, _bool):
@@ -91,6 +71,14 @@ class Dealer:
         
     def GetHand(self):
         return self.card
+    
+    def DisplayHand(self, _hide = True):
+        print("Dealer hands :")
+        for card in self.card:
+            print(card[1], card[0])
+            if _hide:
+                print("[/?]")
+                break
 
 def CalculateScore(_cards):
     
@@ -151,30 +139,67 @@ def main():
         dealer = Dealer()
         dealer.AddCard(Distribute(deck , 2))
         
-        while not player.GetFinishedTurn():
+        playerLoose = False
+        while player.GetFinishedTurn():
+            print("Player turn :")
+            dealer.DisplayHand()
             player.DisplayHand()
             score = CalculateScore(player.GetHand())
             print(f"Player score = {score}")
-            if player.PlayerChoice() == 'Hit':
+            if player.PlayerChoice() == 'hit':
                 player.AddCard(Distribute(deck))
-            else:
                 player.SetFinishedTurn(True)
-        
-        while CalculateScore(dealer.)
-        
-        while True:
-            choice = input("Do you want restart or quit ? 'r' for restart | 'q' for quit")
-            
-            if choice == 'r' or choice == 'q':
+            else:
+                player.SetFinishedTurn(False)
+                
+            if CalculateScore(player.GetHand()) > 21:
+                print("Player Loose")
+                player.DisplayHand() 
+                print(f"Player Score : {CalculateScore(player.GetHand())}")
+                playerLoose = True
                 break
-            else :
-                print("Please enter 'r' or 'q'")
         
-        # quit flag
-        if choice == 'r':
+        if not playerLoose :
+        
+            while CalculateScore(dealer.GetHand()) < 17:
+                print("Dealer turn :")
+                dealer.DisplayHand(False)
+                dealer.AddCard(Distribute(deck))
+
+            
+        
+            
+            if CalculateScore(dealer.GetHand()) > 21:
+                print("Player Win")
+            elif CalculateScore(player.GetHand()) > 21:
+                print("Dealer Win")
+            else:
+                if CalculateScore(dealer.GetHand()) > CalculateScore(player.GetHand()):
+                    print("Dealer Win")
+                elif CalculateScore(dealer.GetHand()) < CalculateScore(player.GetHand()):
+                    print("Player Win")
+                else:
+                    print("Draw")
+                
+            dealer.DisplayHand(False)
+            print(f"Dealer Score : {CalculateScore(dealer.GetHand())}")   
+            player.DisplayHand() 
+            print(f"Player Score : {CalculateScore(player.GetHand())}")
+            
             break
+            while True:
+                choice = input("Do you want restart or quit ? 'r' for restart | 'q' for quit : ").strip().lower()
+                
+                if choice == 'r' or choice == 'q':
+                    break
+                else :
+                    print("Please enter 'r' or 'q'")
+            
+            # quit flag
+            if choice == 'q':
+                ...
         
         
 
-if __name__ in "__main__":
+if __name__ == "__main__":
     main()
