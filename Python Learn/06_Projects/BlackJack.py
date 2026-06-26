@@ -57,9 +57,9 @@ class Player:
     
     def PlayerChoice(self):
         while True:
-            choice = input("Choose an action between : 'Hit' | 'Stand' : ").strip().lower()
+            choice = input("Choose an action between : 'Hit' | 'Stand' | 'Double Down': ").strip().lower()
             
-            if choice == "hit" or choice == "stand":
+            if choice == "hit" or choice == "stand" or choice == "double down":
                 return choice
             else:
                 print("Please enter : 'Hit' or 'stand'")
@@ -161,10 +161,15 @@ def PlayerTurn(_player, _dealer, _deck):
             
         score = CalculateScore(_player.GetHand())
         print(f"Player score = {score}")
-            
-        if _player.PlayerChoice() == 'hit':
+        
+        choice = _player.PlayerChoice()
+      
+        if choice == 'hit':
             _player.AddCard(Distribute(_deck))
             _player.SetFinishedTurn(False)
+        elif choice == "double down":
+            _player.AddCard(Distribute(_deck))
+            _player.SetFinishedTurn(True)
         else:
             _player.SetFinishedTurn(True)
                     
@@ -250,7 +255,7 @@ def main():
              
         if not blackJack:       
             PlayerTurn(player, dealer, deck)
-                        
+                                         
             if not player.GetLoose():
                 DealerTurn(dealer, deck)
         
