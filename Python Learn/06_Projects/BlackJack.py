@@ -1,13 +1,39 @@
 import random
+import os
 
-def GetInt(_str, _min=1):
+def ClearS():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def PrintSeparator(char="=", length=50):
+    print(char * length)
+
+def PrintTitle(title):
+    print("\n" + "=" * 50)
+    print(title.center(50))
+    print("=" * 50 + "\n")
+
+def GetSuitSymbol(suit):
+    symbols = {
+        "Heart": "♥",
+        "Diamond": "♦",
+        "Club": "♣",
+        "Spade": "♠"
+    }
+    return symbols.get(suit, suit)
+
+def FormatCard(card):
+    suit, rank = card
+    symbol = GetSuitSymbol(suit)
+    return f"{rank:>5} {symbol}"
+
+def GetInt(_str, _min=1, _max = 8):
     while True:
         try:
             nb = int(input(_str))
-            if nb >= _min:
+            if _min <= nb <= _max:
                 return nb
             else:
-                print(f"Please Enter an int greater or equal to {_min}")
+                print(f"Please Enter an int between {_min} and {_max}")
         except ValueError:
             print("Please enter an valid int")
 
@@ -33,7 +59,10 @@ class Player:
         self.card = []
         self.finishedTurn = False
         self.score = 0
+        self.money = 0
+        self.bet = 0
         self.loose = False
+        self.isSplit = False
         self.AddCard(_hand)
         
     def AddCard(self, _card):
@@ -44,9 +73,12 @@ class Player:
         # print(self.card)      
         
     def DisplayHand(self):
-        print("Player hands :")
+        print("\n" + "─" * 50)
+        print("  🎮 PLAYER'S HAND")
+        print("─" * 50)
         for card in self.card:
-            print(card[1], card[0])
+            print(f"  {FormatCard(card)}")
+        print("─" * 50)
             
     def GetFinishedTurn(self):
         # print(self.finishedTurn)
@@ -57,12 +89,30 @@ class Player:
     
     def PlayerChoice(self):
         while True:
-            choice = input("Choose an action between : 'Hit' | 'Stand' | 'Double Down': ").strip().lower()
+            choice = input("\n  Choose an action:\n    [H]it | [S]tand | [D]ouble Down | [SP]lit | [I]nsurance: ").strip().lower()
             
-            if choice == "hit" or choice == "stand" or choice == "double down":
-                return choice
+            if choice == "h" or choice == "hit":
+                return "hit"
+            elif choice == "s" or choice == "stand":
+                return "stand"
+            elif choice == "d" or choice == "double down":
+                return "double down"
+            elif choice == "sp" or choice == "split":
+                return "split"
+            elif choice == "i" or choice == "insurance":
+                return "insurance"
             else:
-                print("Please enter : 'Hit' or 'stand'")
+                print("Please enter: 'H' (Hit) | 'S' (Stand) | 'D' (Double Down) | 'S' Split | 'I' Insurance")
+    
+    def SetSplit(self, _bool):
+        self.isSplit = _bool
+    
+    def GetSplit(self):
+        return self.isSplit
+    
+    def SplitHand(self):
+        self.card = [self.card[0], self.card[1]]      
+        
     
     def SetScore(self, _nb):
         self.score = _nb
@@ -75,6 +125,24 @@ class Player:
     
     def GetLoose(self):
         return self.loose
+    
+    def SetBet(self, _bet):
+        self.bet = _bet
+    
+    def GetBet(self):
+        return self.bet
+
+    def WinBet(self):
+        self.money += self.bet
+
+    def LoseBet(self):
+        self.money -= self.bet
+        
+    def PushBet(self):
+        self.bet = 0
+
+    def DoubleBet(self):
+        self.bet *= 2
         
 class Dealer:
     
@@ -92,13 +160,19 @@ class Dealer:
     def GetHand(self):
         return self.card
     
+    def GetFirstCard(self):
+        return self.card[0]
+    
     def DisplayHand(self, _hide = True):
-        print("Dealer hands :")
-        for card in self.card:
-            print(card[1], card[0])
-            if _hide:
-                print("[/?]")
-                break
+        print("\n" + "─" * 50)
+        print("  🎰 DEALER'S HAND")
+        print("─" * 50)
+        for i, card in enumerate(self.card):
+            if _hide and i > 0:
+                print(f"  {'[HIDDEN]':>5}")
+            else:
+                print(f"  {FormatCard(card)}")
+        print("─" * 50)
 
 def CalculateScore(_cards):
     
@@ -107,9 +181,15 @@ def CalculateScore(_cards):
     for card in _cards:
         score += CARD_VALUES[card[1]]
     
-    if score > 21:
-        if "Ace" in _cards:
-            score -= 10
+    aceCount = 0
+    
+    for card in _cards:
+        if card == "Ace":
+            aceCount += 1
+                
+    while score > 21 and aceCount > 0:
+        score -= 10
+        ace_count -= 1
     
     return score
     
@@ -151,40 +231,69 @@ def IsBlackJack(_deck):
         return True
     else:
         return False
+
+def SameCardHand(_hand):
+    tempCard = None
+    
+    for card in _hand:
+        tempCard = card
+        if card != tempCard:
+            return False
+    
+    return True   
     
 # All player action is in this
 def PlayerTurn(_player, _dealer, _deck):
     while not _player.GetFinishedTurn():
-        print("Player turn :")
+        print("\n" + "=" * 50)
+        print("PLAYER'S TURN".center(50))
+        print("=" * 50)
+        
         _dealer.DisplayHand()
         _player.DisplayHand()
             
         score = CalculateScore(_player.GetHand())
-        print(f"Player score = {score}")
+        print(f"\n  💰 Your score: {score}")
+        print()
         
         choice = _player.PlayerChoice()
       
         if choice == 'hit':
-            _player.AddCard(Distribute(_deck))
+            new_card = Distribute(_deck)
+            _player.AddCard(new_card)
+            print(f"\n  ✓ You drew: {FormatCard(new_card[0])}")
             _player.SetFinishedTurn(False)
         elif choice == "double down":
-            _player.AddCard(Distribute(_deck))
+            new_card = Distribute(_deck)
+            _player.AddCard(new_card)
+            print(f"\n  ✓ You doubled down and drew: {FormatCard(new_card[0])}")
             _player.SetFinishedTurn(True)
         else:
+            print("\n  ✓ You stand!")
             _player.SetFinishedTurn(True)
                     
         if CalculateScore(_player.GetHand()) > 21:
-            print("Player Loose")
+            print("\n" + "!" * 50)
+            print("  ❌ BUST! Your score exceeded 21".center(50))
+            print("!" * 50)
             _player.DisplayHand() 
-            print(f"Player Score : {CalculateScore(_player.GetHand())}")
+            print(f"\n  💥 Your final score: {CalculateScore(_player.GetHand())}")
             _player.SetLoose(True)
             break
 
 def DealerTurn(_dealer, _deck):
+    print("\n" + "=" * 50)
+    print("DEALER'S TURN".center(50))
+    print("=" * 50)
+    
     while CalculateScore(_dealer.GetHand()) < 17:
-        print("Dealer turn :")
-        _dealer.DisplayHand(False)
-        _dealer.AddCard(Distribute(_deck))         
+        print("\n  🎰 Dealer's score: " + str(CalculateScore(_dealer.GetHand())))
+        new_card = Distribute(_deck)
+        _dealer.AddCard(new_card)
+        print(f"  ✓ Dealer drew: {FormatCard(new_card[0])}")
+        
+    _dealer.DisplayHand(False)
+    print(f"\n  💰 Dealer's final score: {CalculateScore(_dealer.GetHand())}")         
 
 def BlackJack(_player, _dealer):
     
@@ -194,14 +303,22 @@ def BlackJack(_player, _dealer):
     
     if IsBlackJack(_player.GetHand()):
             if IsBlackJack(_dealer.GetHand()):
-                print("Push, Dealer and Player have an black jack")
+                print("\n" + "🎉" * 25)
+                print("  BLACKJACK! - Both have BlackJack!".center(50))
+                print("  IT'S A PUSH!".center(50))
+                print("🎉" * 25)
                 blackJack = True
             else:
-                print("Player have a black jack")
+                print("\n" + "🎉" * 25)
+                print("  BLACKJACK!".center(50))
+                print("  YOU WIN WITH BLACKJACK!".center(50))
+                print("🎉" * 25)
                 blackJack = True
                 playerWin = True
     elif IsBlackJack(_dealer.GetHand()):
-                print("Dealer have a black jack")
+                print("\n" + "😞" * 25)
+                print("  DEALER'S BLACKJACK".center(50))
+                print("😞" * 25)
                 blackJack = True
                 dealerWin = True
                 
@@ -212,39 +329,57 @@ def PartiEnd(_player, _dealer):
     playerWin = False
     dealerWin = False
     
+    print("\n" + "=" * 50)
+    print("FINAL RESULT".center(50))
+    print("=" * 50)
+    
+    _dealer.DisplayHand(False)
+    print(f"  💰 Dealer's final score: {CalculateScore(_dealer.GetHand())}")   
+    
+    _player.DisplayHand() 
+    print(f"  💰 Your final score: {CalculateScore(_player.GetHand())}")
+    
+    print("\n" + "─" * 50)
+    
     if CalculateScore(_dealer.GetHand()) > 21:
-        print("Player Win")
+        print("  🎉 PLAYER WINS! Dealer went BUST!".center(50))
         playerWin = True
     elif CalculateScore(_player.GetHand()) > 21:
-        print("Dealer Win")
+        print("  😞 DEALER WINS! You went BUST!".center(50))
         dealerWin = True
     else:
         if CalculateScore(_dealer.GetHand()) > CalculateScore(_player.GetHand()):
-            print("Dealer Win")
+            print("  😞 DEALER WINS!".center(50))
             dealerWin = True
         elif CalculateScore(_dealer.GetHand()) < CalculateScore(_player.GetHand()):
-            print("Player Win")
+            print("  🎉 PLAYER WINS!".center(50))
             playerWin = True
         else:
-            print("Draw")
-                
-    _dealer.DisplayHand(False)
-    print(f"Dealer Score : {CalculateScore(_dealer.GetHand())}")   
-    _player.DisplayHand() 
-    print(f"Player Score : {CalculateScore(_player.GetHand())}") 
+            print("  🤝 IT'S A DRAW!".center(50))
+    
+    print("─" * 50 + "\n")
     
     return playerWin, dealerWin
         
 def main():
     
+    ClearS()
+    PrintTitle("🎰 WELCOME TO BLACKJACK 🎰")
+    
     inGame = True
-    nbDeck = GetInt("How many deck you want ? ")
+    nbDeck = GetInt("How many decks do you want? (1-8): ", 1)
     deck = CreateDeck(nbDeck)
     random.shuffle(deck)
     
+    game_count = 0
+    
     while inGame:
+        game_count += 1
+        ClearS()
+        PrintTitle(f"🎰 BLACKJACK - Game #{game_count} 🎰")
     
         if len(deck) < int((52*nbDeck) * float(0.2)):
+            print("\n  🔄 Reshuffling deck...\n")
             deck = CreateDeck(nbDeck)
             random.shuffle(deck)
     
@@ -262,15 +397,18 @@ def main():
         playerWin, dealerWin = PartiEnd(player, dealer)
         
         while True:
-            choice = input("Do you want restart or quit ? 'r' for restart | 'q' for quit : ").strip().lower()
+            choice = input("\n  Play another round? ('r' for restart | 'q' for quit): ").strip().lower()
                 
             if choice == 'r' or choice == 'q':
                 break
-            else :
-                print("Please enter 'r' or 'q'")    
+            else:
+                print("  ⚠️  Please enter 'r' or 'q'")    
             
         # quit flag
         if choice == 'q':
+            print("\n" + "=" * 50)
+            print("Thanks for playing! Goodbye!".center(50))
+            print("=" * 50 + "\n")
             break
         
         
