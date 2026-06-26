@@ -76,8 +76,17 @@ class Player:
         print("\n" + "─" * 50)
         print("  🎮 PLAYER'S HAND")
         print("─" * 50)
-        for card in self.card:
-            print(f"  {FormatCard(card)}")
+        if not self.isSplit:
+            for card in self.card:
+                print(f"  {FormatCard(card)}")
+        else :
+            print("Split 1")
+            for card in self.card[0]:
+                print(f"  {FormatCard(card)}")
+            print()
+            print("Split 2")
+            for card in self.card[1]:
+                print(f"  {FormatCard(card)}")
         print("─" * 50)
             
     def GetFinishedTurn(self):
@@ -89,7 +98,7 @@ class Player:
     
     def PlayerChoice(self):
         while True:
-            choice = input("\n  Choose an action:\n    [H]it | [S]tand | [D]ouble Down | [SP]lit | [I]nsurance: ").strip().lower()
+            choice = input("\n  Choose an action:\n    [H]it | [S]tand | [D]ouble Down | [SP]lit:").strip().lower()
             
             if choice == "h" or choice == "hit":
                 return "hit"
@@ -99,8 +108,8 @@ class Player:
                 return "double down"
             elif choice == "sp" or choice == "split":
                 return "split"
-            elif choice == "i" or choice == "insurance":
-                return "insurance"
+            # elif choice == "i" or choice == "insurance":
+            #     return "insurance"
             else:
                 print("Please enter: 'H' (Hit) | 'S' (Stand) | 'D' (Double Down) | 'S' Split | 'I' Insurance")
     
@@ -156,6 +165,10 @@ class Dealer:
             self.card.append(card)
             
         # print(self.card) 
+        
+    def AddCard(self, _card, _splitNb):
+        for card in _card:
+            self.card[_splitNb - 1].append(card)
         
     def GetHand(self):
         return self.card
@@ -251,35 +264,101 @@ def PlayerTurn(_player, _dealer, _deck):
         
         _dealer.DisplayHand()
         _player.DisplayHand()
-            
-        score = CalculateScore(_player.GetHand())
-        print(f"\n  💰 Your score: {score}")
-        print()
+                
+        if not _player.GetSplit():
+            print(f"\n  💰 Your score: {CalculateScore(_player.GetHand())}")
+            print()
+        else :
+            print(f"\n  💰 Split 1 score: {CalculateScore(_player.GetHand()[0])}")
+            print(f"\n  💰 Split 2  score: {CalculateScore(_player.GetHand()[1])}")
+            print()
         
         choice = _player.PlayerChoice()
       
         if choice == 'hit':
-            new_card = Distribute(_deck)
-            _player.AddCard(new_card)
-            print(f"\n  ✓ You drew: {FormatCard(new_card[0])}")
-            _player.SetFinishedTurn(False)
+            
+            if not _player.GetSplit():
+                newCard = Distribute(_deck)
+                _player.AddCard(newCard)
+                print(f"\n  ✓ You drew: {FormatCard(newCard[0])}")
+                _player.SetFinishedTurn(False)
+            else:
+                newCard = Distribute(_deck)
+                print(f"\n  ✓ You drew: {FormatCard(newCard[0])}")
+                
+                while True:
+                    handNb = GetInt("Choose hand '1' or '2' : ")
+                    
+                    if handNb == 1 or handNb == 2:
+                        break
+                    else:
+                        print("Please choice between '1' or '2'")
+                if CalculateScore(_player.GetHand()[handNb - 1]) > 21:
+                    print(f"You can add an card to this split score over 21, split score = {CalculateScore(_player.GetHand()[handNb - 1])}")
+                else:
+                    print(f"\n  ✓ You add in your split {handNb} : {FormatCard(newCard[0])}")
+                
+                _player.SetFinishedTurn(False)
+        
         elif choice == "double down":
-            new_card = Distribute(_deck)
-            _player.AddCard(new_card)
-            print(f"\n  ✓ You doubled down and drew: {FormatCard(new_card[0])}")
-            _player.SetFinishedTurn(True)
+            if not _player.GetSplit():
+                newCard = Distribute(_deck)
+                _player.AddCard(newCard)
+                print(f"\n  ✓ You doubled down and drew: {FormatCard(newCard[0])}")
+                _player.SetFinishedTurn(True)
+            else:
+                print('You can make a double down on a split')
+                _player.SetFinishedTurn(False)
+        elif choice == "split":
+            hand = _player.GetHand()
+            if SameCardHand(hand) and not _player.GetSplit():
+                _player.SetSplit(True)
+                _player.SplitHand()
+                print(f"\n  ✓ You split you hand in two: {FormatCard(hand[0])} and {FormatCard(hand[1])}")
+            else:
+                if _player.GetSplit():
+                    print("You have allready split your hand")
+                else:
+                    print("You didn't have the same card in your hand")
+        # elif choice == "insurance":
+        #     ...
         else:
             print("\n  ✓ You stand!")
             _player.SetFinishedTurn(True)
-                    
-        if CalculateScore(_player.GetHand()) > 21:
-            print("\n" + "!" * 50)
-            print("  ❌ BUST! Your score exceeded 21".center(50))
-            print("!" * 50)
-            _player.DisplayHand() 
-            print(f"\n  💥 Your final score: {CalculateScore(_player.GetHand())}")
-            _player.SetLoose(True)
-            break
+        
+        
+        if not _player.GetSplit():       
+            if CalculateScore(_player.GetHand()) > 21:
+                print("\n" + "!" * 50)
+                print("  ❌ BUST! Your score exceeded 21".center(50))
+                print("!" * 50)
+                _player.DisplayHand() 
+                print(f"\n  💥 Your final score: {CalculateScore(_player.GetHand())}")
+                _player.SetLoose(True)
+                break
+        else :
+            if CalculateScore(_player.GetHand()[0]) > 21 and CalculateScore(_player.GetHand()[1]) > 21:
+                print("\n" + "!" * 50)
+                print("  ❌ BUST! Your score exceeded 21".center(50))
+                print("!" * 50)
+                _player.DisplayHand() 
+                print(f"\n  💥 Your final score: {CalculateScore(_player.GetHand())}")
+                _player.SetLoose(True)
+                break
+            elif CalculateScore(_player.GetHand()[0]) > 21:
+                print("\n" + "!" * 50)
+                print("  ❌ Split 1 BUST! Your score exceeded 21".center(50))
+                print("!" * 50)
+                _player.DisplayHand() 
+                print(f"\n  💥 Your final score: {CalculateScore(_player.GetHand())}")
+            
+            elif CalculateScore(_player.GetHand()[1]) > 21:
+                print("\n" + "!" * 50)
+                print("  ❌ Split 2 BUST! Your score exceeded 21".center(50))
+                print("!" * 50)
+                _player.DisplayHand() 
+                print(f"\n  💥 Your final score: {CalculateScore(_player.GetHand())}")
+            
 
 def DealerTurn(_dealer, _deck):
     print("\n" + "=" * 50)
@@ -288,9 +367,9 @@ def DealerTurn(_dealer, _deck):
     
     while CalculateScore(_dealer.GetHand()) < 17:
         print("\n  🎰 Dealer's score: " + str(CalculateScore(_dealer.GetHand())))
-        new_card = Distribute(_deck)
-        _dealer.AddCard(new_card)
-        print(f"  ✓ Dealer drew: {FormatCard(new_card[0])}")
+        newCard = Distribute(_deck)
+        _dealer.AddCard(newCard)
+        print(f"  ✓ Dealer drew: {FormatCard(newCard[0])}")
         
     _dealer.DisplayHand(False)
     print(f"\n  💰 Dealer's final score: {CalculateScore(_dealer.GetHand())}")         
