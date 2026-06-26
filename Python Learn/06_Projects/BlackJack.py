@@ -1,5 +1,16 @@
 import random
 
+def GetInt(_str, _min=1):
+    while True:
+        try:
+            nb = int(input(_str))
+            if nb >= _min:
+                return nb
+            else:
+                print(f"Please Enter an int greater or equal to {_min}")
+        except ValueError:
+            print("Please enter an valid int")
+
 CARD_VALUES = {
     "Ace": 11,
     "2": 2,
@@ -18,10 +29,12 @@ CARD_VALUES = {
 
 class Player:
     
-    def __init__(self):
+    def __init__(self, _hand):
         self.card = []
-        self.finishedTurn = True
+        self.finishedTurn = False
         self.score = 0
+        self.loose = False
+        self.AddCard(_hand)
         
     def AddCard(self, _card):
         
@@ -36,7 +49,7 @@ class Player:
             print(card[1], card[0])
             
     def GetFinishedTurn(self):
-        print(self.finishedTurn)
+        # print(self.finishedTurn)
         return self.finishedTurn
     
     def SetFinishedTurn(self, _bool):
@@ -56,11 +69,18 @@ class Player:
         
     def GetHand(self):
         return self.card
+    
+    def SetLoose(self, _bool):
+        self.loose = _bool
+    
+    def GetLoose(self):
+        return self.loose
         
 class Dealer:
     
-    def __init__(self):
+    def __init__(self, _hand):
         self.card = []
+        self.AddCard(_hand)
         
     def AddCard(self, _card):
         
@@ -126,78 +146,127 @@ def Distribute(_deck, _nb = 1):
     # print(hand)
     return hand
 
+def IsBlackJack(_deck):
+    if CalculateScore(_deck) == 21:
+        return True
+    else:
+        return False
+    
+# All player action is in this
+def PlayerTurn(_player, _dealer, _deck):
+    while not _player.GetFinishedTurn():
+        print("Player turn :")
+        _dealer.DisplayHand()
+        _player.DisplayHand()
+            
+        score = CalculateScore(_player.GetHand())
+        print(f"Player score = {score}")
+            
+        if _player.PlayerChoice() == 'hit':
+            _player.AddCard(Distribute(_deck))
+            _player.SetFinishedTurn(False)
+        else:
+            _player.SetFinishedTurn(True)
+                    
+        if CalculateScore(_player.GetHand()) > 21:
+            print("Player Loose")
+            _player.DisplayHand() 
+            print(f"Player Score : {CalculateScore(_player.GetHand())}")
+            _player.SetLoose(True)
+            break
+
+def DealerTurn(_dealer, _deck):
+    while CalculateScore(_dealer.GetHand()) < 17:
+        print("Dealer turn :")
+        _dealer.DisplayHand(False)
+        _dealer.AddCard(Distribute(_deck))         
+
+def BlackJack(_player, _dealer):
+    
+    blackJack = False
+    dealerWin = False
+    playerWin = False
+    
+    if IsBlackJack(_player.GetHand()):
+            if IsBlackJack(_dealer.GetHand()):
+                print("Push, Dealer and Player have an black jack")
+                blackJack = True
+            else:
+                print("Player have a black jack")
+                blackJack = True
+                playerWin = True
+    elif IsBlackJack(_dealer.GetHand()):
+                print("Dealer have a black jack")
+                blackJack = True
+                dealerWin = True
+                
+    return blackJack, dealerWin, playerWin
+
+def PartiEnd(_player, _dealer):
+    
+    playerWin = False
+    dealerWin = False
+    
+    if CalculateScore(_dealer.GetHand()) > 21:
+        print("Player Win")
+        playerWin = True
+    elif CalculateScore(_player.GetHand()) > 21:
+        print("Dealer Win")
+        dealerWin = True
+    else:
+        if CalculateScore(_dealer.GetHand()) > CalculateScore(_player.GetHand()):
+            print("Dealer Win")
+            dealerWin = True
+        elif CalculateScore(_dealer.GetHand()) < CalculateScore(_player.GetHand()):
+            print("Player Win")
+            playerWin = True
+        else:
+            print("Draw")
+                
+    _dealer.DisplayHand(False)
+    print(f"Dealer Score : {CalculateScore(_dealer.GetHand())}")   
+    _player.DisplayHand() 
+    print(f"Player Score : {CalculateScore(_player.GetHand())}") 
+    
+    return playerWin, dealerWin
+        
 def main():
     
     inGame = True
-    while inGame:
-        deck = CreateDeck(6)
-        random.shuffle(deck)
+    nbDeck = GetInt("How many deck you want ? ")
+    deck = CreateDeck(nbDeck)
+    random.shuffle(deck)
     
-        player = Player()
-        player.AddCard(Distribute(deck , 2))
+    while inGame:
+    
+        if len(deck) < int((52*nbDeck) * float(0.2)):
+            deck = CreateDeck(nbDeck)
+            random.shuffle(deck)
+    
+        player = Player(Distribute(deck , 2))
+        dealer = Dealer(Distribute(deck , 2))
         
-        dealer = Dealer()
-        dealer.AddCard(Distribute(deck , 2))
+        blackJack, dealerWin, playerWin = BlackJack(player, dealer)
+             
+        if not blackJack:       
+            PlayerTurn(player, dealer, deck)
+                        
+            if not player.GetLoose():
+                DealerTurn(dealer, deck)
         
-        playerLoose = False
-        while player.GetFinishedTurn():
-            print("Player turn :")
-            dealer.DisplayHand()
-            player.DisplayHand()
-            score = CalculateScore(player.GetHand())
-            print(f"Player score = {score}")
-            if player.PlayerChoice() == 'hit':
-                player.AddCard(Distribute(deck))
-                player.SetFinishedTurn(True)
-            else:
-                player.SetFinishedTurn(False)
+        playerWin, dealerWin = PartiEnd(player, dealer)
+        
+        while True:
+            choice = input("Do you want restart or quit ? 'r' for restart | 'q' for quit : ").strip().lower()
                 
-            if CalculateScore(player.GetHand()) > 21:
-                print("Player Loose")
-                player.DisplayHand() 
-                print(f"Player Score : {CalculateScore(player.GetHand())}")
-                playerLoose = True
+            if choice == 'r' or choice == 'q':
                 break
-        
-        if not playerLoose :
-        
-            while CalculateScore(dealer.GetHand()) < 17:
-                print("Dealer turn :")
-                dealer.DisplayHand(False)
-                dealer.AddCard(Distribute(deck))
-
+            else :
+                print("Please enter 'r' or 'q'")    
             
-        
-            
-            if CalculateScore(dealer.GetHand()) > 21:
-                print("Player Win")
-            elif CalculateScore(player.GetHand()) > 21:
-                print("Dealer Win")
-            else:
-                if CalculateScore(dealer.GetHand()) > CalculateScore(player.GetHand()):
-                    print("Dealer Win")
-                elif CalculateScore(dealer.GetHand()) < CalculateScore(player.GetHand()):
-                    print("Player Win")
-                else:
-                    print("Draw")
-                
-            dealer.DisplayHand(False)
-            print(f"Dealer Score : {CalculateScore(dealer.GetHand())}")   
-            player.DisplayHand() 
-            print(f"Player Score : {CalculateScore(player.GetHand())}")
-            
+        # quit flag
+        if choice == 'q':
             break
-            while True:
-                choice = input("Do you want restart or quit ? 'r' for restart | 'q' for quit : ").strip().lower()
-                
-                if choice == 'r' or choice == 'q':
-                    break
-                else :
-                    print("Please enter 'r' or 'q'")
-            
-            # quit flag
-            if choice == 'q':
-                ...
         
         
 
