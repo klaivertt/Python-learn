@@ -77,7 +77,9 @@ class Hand:
 
     def DoubleBet(self):
         self.bet *= 2
-
+    
+    def AddBet(self, _nb):
+        self.bet += _nb
 
 class Player:
 
@@ -90,6 +92,31 @@ class Player:
 
     def AddCard(self, _card, _hand=0):
         self.hands[_hand].AddCards(_card)
+        
+    def ChooseBet(self, handIndex=0):
+        hand = self.hands[handIndex]
+        print(f"Choose a bet for hand {handIndex + 1}")
+        print(f"Actual bet : {hand.bet}")
+        
+        while True:
+            print("You can type [C]ancel")
+            choice = input("Choice You bet :").strip().lower()
+            if choice in ("c", "cancel"):
+                break
+            
+            try:
+                nb = int(choice)
+                if nb > 0:
+                    print("Please choose an int greater than 0")
+                else:
+                    
+                    if self.money >= nb:
+                        hand.AddBet(nb)
+                        break
+                    else:
+                        print(f"You can add {nb} to your bet because you haven't enough money : {self.money}")
+            except ValueError:
+                print("Please enter an valid int or [C]ancel")
 
     def DisplayHand(self):
         print("\n" + "─" * 50)
@@ -166,18 +193,18 @@ class Player:
 
         return hand.cards[0][1] == hand.cards[1][1]
 
-    def SplitHand(self, hand_index=0):
-        hand = self.hands[hand_index]
+    def SplitHand(self, handIndex=0):
+        hand = self.hands[handIndex]
         card1 = hand.cards[0]
         card2 = hand.cards[1]
 
         hand.cards = [card1]
 
-        second_hand = Hand()
-        second_hand.cards = [card2]
-        second_hand.bet = hand.bet
+        secondHand = Hand()
+        secondHand.cards = [card2]
+        secondHand.bet = hand.bet
 
-        self.hands.insert(hand_index + 1, second_hand)
+        self.hands.insert(handIndex + 1, secondHand)
 
 
 class Dealer:
