@@ -10,6 +10,7 @@ class Stat :
         self.criticalStrikeDamage = float(0.25)
         self.armorPenetration = 0
         self.magicPenetration = 0
+        self.lifeSteal = float(0)
 
 class Player :
     def __init__(self):
@@ -19,5 +20,6 @@ class Player :
         self.level = 1
         self.xp = 0
         self.gold = 0
+        self.stat = Stat()
         
         
