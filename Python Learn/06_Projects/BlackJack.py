@@ -86,17 +86,19 @@ class Player:
     def __init__(self, _cards):
         self.hands = [Hand()]
         self.finishedTurn = False
-        self.money = 0
+        self.money = 1000
         self.loose = False
         self.hands[0].AddCards(_cards)
 
     def AddCard(self, _card, _hand=0):
         self.hands[_hand].AddCards(_card)
         
-    def ChooseBet(self, handIndex=0):
-        hand = self.hands[handIndex]
-        print(f"Choose a bet for hand {handIndex + 1}")
+    def ChooseBet(self, _handIndex=0):
+        hand = self.hands[_handIndex]
+        print()
+        print(f"Choose a bet for hand {_handIndex + 1}")
         print(f"Actual bet : {hand.bet}")
+        print(f"Actual Money : {self.GetMoney()}")
         
         while True:
             print("You can type [C]ancel")
@@ -106,17 +108,43 @@ class Player:
             
             try:
                 nb = int(choice)
-                if nb > 0:
+                if nb <= 0:
                     print("Please choose an int greater than 0")
                 else:
                     
-                    if self.money >= nb:
+                    if self.money - hand.bet >= nb:
                         hand.AddBet(nb)
                         break
                     else:
-                        print(f"You can add {nb} to your bet because you haven't enough money : {self.money}")
+                        print(f"You can add {nb} to your bet because you haven't enough money : your bet {nb} + {hand.bet} > {self.money}")
             except ValueError:
                 print("Please enter an valid int or [C]ancel")
+                
+        print(f"Your bet for hand {_handIndex} is now : {hand.bet}")
+        
+    def WinMoney(self):
+        money = 0
+        
+        for hand in self.hands:
+            money += hand.GetBet()
+            hand.SetBet(0)
+            
+        print(f"You earn : {money}")
+        print(f"{self.money} + {money} your balance now : {self.money + money}")
+        self.money + money
+        
+    
+    def LooseMoney(self):
+        money = 0
+        
+        for hand in self.hands:
+            money -= hand.GetBet()
+            hand.SetBet(0)
+            
+        print(f"You lost : {money}")
+        print(f"{self.money} - {money} your balance now : {self.money - money}")
+        self.money - money
+    
 
     def DisplayHand(self):
         print("\n" + "─" * 50)
@@ -182,6 +210,9 @@ class Player:
 
     def GetLoose(self):
         return self.loose
+    
+    def GetMoney(self):
+        return self.money
 
     def CanSplitHand(self, hand_index=0):
         if len(self.hands) > 1:
@@ -193,8 +224,8 @@ class Player:
 
         return hand.cards[0][1] == hand.cards[1][1]
 
-    def SplitHand(self, handIndex=0):
-        hand = self.hands[handIndex]
+    def SplitHand(self, _handIndex=0):
+        hand = self.hands[_handIndex]
         card1 = hand.cards[0]
         card2 = hand.cards[1]
 
@@ -204,7 +235,7 @@ class Player:
         secondHand.cards = [card2]
         secondHand.bet = hand.bet
 
-        self.hands.insert(handIndex + 1, secondHand)
+        self.hands.insert(_handIndex + 1, secondHand)
 
 
 class Dealer:
@@ -301,14 +332,18 @@ def PlayerTurn(_player, _dealer, _deck):
         _dealer.DisplayHand()
         _player.DisplayHand()
 
+        
+        _player.ChooseBet()
+        
         canSplit = _player.CanSplitHand(handIndex)
-        canDouble = len(hand.cards) == 2 and not hand.doubleDown
+        canDouble = len(hand.cards) == 2 and not hand.doubleDown and _player.GetMoney() >= (hand.GetBet() * 2)
         choice = _player.PlayerChoice(canSplit, canDouble)
-
+        
+        
         if choice == "hit":
-            new_card = Distribute(_deck)
-            _player.AddCard(new_card, handIndex)
-            print(f"\n  ✓ You drew: {FormatCard(new_card[0])}")
+            newCard = Distribute(_deck)
+            _player.AddCard(newCard, handIndex)
+            print(f"\n  ✓ You drew: {FormatCard(newCard[0])}")
 
             if CalculateScore(hand.cards) > 21:
                 hand.bust = True
@@ -319,10 +354,11 @@ def PlayerTurn(_player, _dealer, _deck):
         if choice == "double down":
             hand.DoubleBet()
             hand.doubleDown = True
-            new_card = Distribute(_deck)
-            _player.AddCard(new_card, handIndex)
+            hand.DoubleBet()
+            newCard = Distribute(_deck)
+            _player.AddCard(newCard, handIndex)
             hand.finished = True
-            print(f"\n  ✓ Double down: {FormatCard(new_card[0])}")
+            print(f"\n  ✓ Double down: {FormatCard(newCard[0])}")
 
             if CalculateScore(hand.cards) > 21:
                 hand.bust = True
@@ -405,7 +441,7 @@ def BlackJack(_player, _dealer):
 def PartiEnd(_player, _dealer):
     playerWin = False
     dealerWin = False
-
+    
     dealer_score = CalculateScore(_dealer.GetHand().cards)
 
     print("\n" + "=" * 50)
@@ -486,10 +522,19 @@ def main():
 
         playerWin, dealerWin = PartiEnd(player, dealer)
 
+        if playerWin:
+            player.WinMoney()
+        elif dealerWin:
+            player.LooseMoney()
+
         while True:
             choice = input("\n  Play another round? ('r' for restart | 'q' for quit): ").strip().lower()
 
             if choice in ('r', 'q'):
+                if choice == "r":
+                    if player.GetMoney() <= 0:
+                        print(f"You can restar an game your balance is to low : {player.GetMoney()}")
+                        choice = "q"
                 break
             print("  ⚠️  Please enter 'r' or 'q'")
 
@@ -498,6 +543,8 @@ def main():
             print("Thanks for playing! Goodbye!".center(50))
             print("=" * 50 + "\n")
             inGame = False
+            
+        
 
 
 if __name__ == "__main__":
