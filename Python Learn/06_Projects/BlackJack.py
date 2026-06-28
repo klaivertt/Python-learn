@@ -62,7 +62,7 @@ class Hand:
         self.cards = []
         self.bet = 0
         self.finished = False
-        self.double_down = False
+        self.doubleDown = False
         self.bust = False
 
     def AddCards(self, _cards):
@@ -99,7 +99,7 @@ class Player:
             status = []
             if hand.finished:
                 status.append("stand")
-            if hand.double_down:
+            if hand.doubleDown:
                 status.append("double")
             if hand.bust:
                 status.append("bust")
@@ -117,11 +117,11 @@ class Player:
     def SetFinishedTurn(self, _bool):
         self.finishedTurn = _bool
 
-    def PlayerChoice(self, can_double=True, can_split=False):
+    def PlayerChoice(self, _canDouble=True, _canSplit=False):
         actions = ["[H]it", "[S]tand"]
-        if can_double:
+        if _canDouble:
             actions.append("[D]ouble Down")
-        if can_split:
+        if _canSplit:
             actions.append("S[P]lit")
 
         prompt = " | ".join(actions)
@@ -133,9 +133,9 @@ class Player:
                 return "hit"
             if choice in ("s", "stand"):
                 return "stand"
-            if can_double and choice in ("d", "double", "double down"):
+            if _canDouble and choice in ("d", "double", "double down"):
                 return "double down"
-            if can_split and choice in ("sp", "p", "split"):
+            if _canSplit and choice in ("sp", "p", "split"):
                 return "split"
             print("Please choose a valid action from the list.")
 
@@ -274,9 +274,9 @@ def PlayerTurn(_player, _dealer, _deck):
         _dealer.DisplayHand()
         _player.DisplayHand()
 
-        can_split = _player.CanSplitHand(handIndex)
-        can_double = len(hand.cards) == 2 and not hand.double_down
-        choice = _player.PlayerChoice(can_double=can_double, can_split=can_split)
+        canSplit = _player.CanSplitHand(handIndex)
+        canDouble = len(hand.cards) == 2 and not hand.doubleDown
+        choice = _player.PlayerChoice(canSplit, canDouble)
 
         if choice == "hit":
             new_card = Distribute(_deck)
@@ -291,7 +291,7 @@ def PlayerTurn(_player, _dealer, _deck):
 
         if choice == "double down":
             hand.DoubleBet()
-            hand.double_down = True
+            hand.doubleDown = True
             new_card = Distribute(_deck)
             _player.AddCard(new_card, handIndex)
             hand.finished = True
@@ -308,14 +308,14 @@ def PlayerTurn(_player, _dealer, _deck):
             _player.SplitHand(handIndex)
 
             # After split, each hand receives one additional card.
-            first_new = Distribute(_deck)
-            second_new = Distribute(_deck)
-            _player.AddCard(first_new, handIndex)
-            _player.AddCard(second_new, handIndex + 1)
+            firstNew = Distribute(_deck)
+            secondNew = Distribute(_deck)
+            _player.AddCard(firstNew, handIndex)
+            _player.AddCard(secondNew, handIndex + 1)
 
             print(f"\n  ✓ Split done on hand {handIndex + 1}")
-            print(f"    Hand {handIndex + 1} gets: {FormatCard(first_new[0])}")
-            print(f"    Hand {handIndex + 2} gets: {FormatCard(second_new[0])}")
+            print(f"    Hand {handIndex + 1} gets: {FormatCard(firstNew[0])}")
+            print(f"    Hand {handIndex + 2} gets: {FormatCard(secondNew[0])}")
             continue
 
         hand.finished = True
