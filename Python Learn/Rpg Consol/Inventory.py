@@ -1,0 +1,4 @@
+import Stat
+
+class Inventory:
+    ...
