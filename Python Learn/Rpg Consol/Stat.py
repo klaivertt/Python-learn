@@ -1,38 +1,40 @@
+#Max value for rpg stat
+MAX_STAT = 20
+
 class Stat:
     def __init__(self):
         # Health
-        self.maxHealth = 100
-        self.health = self.maxHealth
-        self.healthRegeneration = 1
+        self.health = 0
+        self.healthRegeneration = 0
         
         #Rpg stat
-        self.strength = 10
-        self.dexterity = 10
-        self.intelligence = 10
-        self.vitality = 10
-        self.luck = 10
+        self.strength = 0
+        self.dexterity = 0
+        self.intelligence = 0
+        self.vitality = 0
+        self.luck = 0
 
         # Mana
-        self.maxMana = 50
-        self.manaRegeneration = 1
+        self.maxMana = 0
+        self.manaRegeneration = 0
 
         # Damage
-        self.attackDamage = 15
-        self.attackSpeed = 1.0
+        self.attackDamage = 0
+        self.attackSpeed = 0.0
 
         # Armor
-        self.armor = 20
-        self.magicResistance = 20
+        self.armor = 0
+        self.magicResistance = 0
 
         # Critical damage
-        self.criticalChance = 0.05
-        self.criticalDamage = 1.5
+        self.criticalChance = 0.0
+        self.criticalDamage = 0.0
 
         # life steal
         self.lifeSteal = 0
 
         # Precision
-        self.accuracy = 100
+        self.accuracy = 0
         self.dodge = 0
 
         # Penetration
