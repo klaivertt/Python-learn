@@ -1,23 +1,13 @@
-import Stat
-import Tools
-        
+from Entity import Entity
 
-class Player :
+
+class Player(Entity):
     def __init__(self):
-        self.name = ""
-        
-        self.level = 1
-        self.xp = 0
-        self.gold = 0
-        #Base stat for the player link to Level
-        self.levelStat = Stat()
-        self.SetName()
-        
-        #this stat are used to update stat level stat + item stat
-        self.stat = Stat()
-        self.maxHealth = self.stat.health
-        self.health = self.maxHealth
-            
+       super().__init__()
+    
+       
+       
+    
     def SetName(self):
         while True:
             try:
@@ -27,9 +17,12 @@ class Player :
                 print("Please enter an valid string for your name")
         
         self.name = name
+        
     
     def StatisticalDistribution():
-        ...
+        point = 7
+        
+        while point > 0
         # stat a repartir 7
         # boucle while tant que player a des stat a repartir
         # demander valeur au joeur a repartir dans les différente categorie
@@ -37,31 +30,7 @@ class Player :
         # continuer la repartition
         # ne pas oublier de verrifier que le joeur peux s'attribuer ses stat ou non stat a repartir >= stat choisit par joeur 
         # verifier aussi que la stat ne depasse pas la stat maximum de cette categorie
-        
-    def UpdatePlayerStat(self):
-        ...
-        #prendre les stat du joeur lier a sont level
-        #ajouter les stat des armure et des arme
-        #retourner les stat flat
-        
-    def GetArmor(self):
-        ...
-    
-    def GetMagicResistance(self):
-        ...
-    
-    def GetHealth(self):
-        ...
-    
-    def GetMaxHealth(self):
-        ...
-    
-    def GetStat(self):
-        ...
-        
-    def IsDead(self):
-        ...
-    
+     
     def EarnXp(self, _xpValue):
         ...
         

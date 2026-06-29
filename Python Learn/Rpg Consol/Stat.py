@@ -1,18 +1,9 @@
-#Max value for rpg stat
-MAX_STAT = 20
 
 class Stat:
     def __init__(self):
         # Health
         self.health = 0
         self.healthRegeneration = 0
-        
-        #Rpg stat
-        self.strength = 0
-        self.dexterity = 0
-        self.intelligence = 0
-        self.vitality = 0
-        self.luck = 0
 
         # Mana
         self.maxMana = 0

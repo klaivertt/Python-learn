@@ -1,12 +1,9 @@
-import Player
+from Game import Game
 
 def main():
-    player = Player()
+    game = Game()
     
-    inGame = True
-    
-    while inGame:
-        ...
+    game.Run()
     
 
 if __name__ == "__main__":
