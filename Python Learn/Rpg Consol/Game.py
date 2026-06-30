@@ -6,7 +6,7 @@ class Game:
     
     def LoadPlayer(self):
         self.player.SetName()
-        self.player.StatisticalDistribution()
+        self.player.StatisticalDistribution(10)
         
         
     def Load(self):    
