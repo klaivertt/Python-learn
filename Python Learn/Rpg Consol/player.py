@@ -18,6 +18,10 @@ class Player(Entity):
        
        self.statByLevel = Stat(_health = 101, _healthRegeneration = 0.55, _maxMana = 35, _manaRegeneration = 0.65, _attackDamage = 3.5, _armor = 4.6, _magicResistance = 1.3)
        
+       
+    def LoadGold(self , _item, _nb):
+        self.inventory.AddItem(_item, _nb)
+       
     def SetName(self):
         while True:
             try:

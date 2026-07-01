@@ -1,4 +1,5 @@
 from Stat import Stat
+from Inventory import Inventory
 import Tools
 
 #Max value for rpg stat
@@ -27,6 +28,8 @@ class Entity :
         self.intelligence = 0
         self.vitality = 0
         self.luck = 0
+        
+        self.inventory = Inventory()
         
     def AddBaseToStat(self):
         self.baseStat += self.statByLevel
