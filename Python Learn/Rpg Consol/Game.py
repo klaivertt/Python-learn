@@ -1,5 +1,5 @@
 from Player import Player
-
+import Tools
 class Game:
     def __init__(self):
         self.player = Player()
@@ -13,4 +13,6 @@ class Game:
         self.LoadPlayer()
     
     def Run(self):
+        Tools.ClearS()
+        Tools.PrintTitle("Dungeon")
         self.Load()
