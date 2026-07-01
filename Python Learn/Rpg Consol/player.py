@@ -1,4 +1,5 @@
 from Entity import Entity
+from Entity import MAX_STAT
 from Stat import Stat
 import Tools
 
@@ -32,7 +33,7 @@ class Player(Entity):
         
         self.name = name
         
-    def StatisticalDistribution(self, _nb):
+    def StatisticalDistribution(self, _nb, _maxForAttribut = MAX_STAT):
         # stat a repartir 
         # boucle while tant que player a des stat a repartir
         # demander valeur au joeur a repartir dans les différente categorie
@@ -52,7 +53,7 @@ class Player(Entity):
             Tools.ClearS()
             
             if not attributed:
-                print(f"You can't attribute more than 15 to an ability")
+                print(f"You can't attribute more than {_maxForAttribut} to an ability")
             
             self.DisplayAbility()
             
@@ -80,27 +81,27 @@ class Player(Entity):
             
             attributed = True
             if choice == "strength":
-                if self.strength < 15:
+                if self.strength < _maxForAttribut:
                     self.strength += 1
                 else:
                     attributed = False
             if choice == "dexterity":
-                if self.dexterity < 15:
+                if self.dexterity < _maxForAttribut:
                     self.dexterity += 1
                 else:
                     attributed = False
             if choice == "intelligence":
-                if self.intelligence < 15:
+                if self.intelligence < _maxForAttribut:
                     self.intelligence += 1
                 else:
                     attributed = False
             if choice == "vitality":
-                if self.vitality < 15:
+                if self.vitality < _maxForAttribut:
                     self.vitality += 1
                 else:
                     attributed = False
             if choice == "luck":
-                if self.luck < 15:
+                if self.luck < _maxForAttribut:
                     self.luck += 1
                 else:
                     attributed = False

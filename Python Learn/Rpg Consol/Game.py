@@ -8,7 +8,7 @@ class Game:
         self.items = {"Gold": Item("Gold", _itemType = Item.Type.MONEY)}
     def LoadPlayer(self):
         self.player.SetName()
-        # self.player.StatisticalDistribution(10)
+        # self.player.StatisticalDistribution(10, 15)
         self.player.LoadGold(self.items["Gold"], 50)
         self.player.inventory.DispayItems()
         self.player.inventory.DisplayEquipement()

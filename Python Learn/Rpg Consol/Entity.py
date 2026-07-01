@@ -41,12 +41,13 @@ class Entity :
         #prendre les stat de l'entier lier a sont level
         #ajouter les stat des armure et des arme
         #retourner les stat flat
+        self.currentStat = self.baseStat
         
         if not self.inventory.weapon == None and isinstance(self.inventory.weapon, Weapon):
-            self.currentStat = self.baseStat + self.inventory.weapon.stat
+            self.currentStat += self.inventory.weapon.stat
         for armor in self.inventory.armor:
             if not armor == None and isinstance(armor, Armor):
-                self.currentStat + self.inventory.armor[armor.value].stat
+                self.currentStat += self.inventory.armor[armor.value].stat
                 
         self.maxHealth = self.currentStat.health
                     

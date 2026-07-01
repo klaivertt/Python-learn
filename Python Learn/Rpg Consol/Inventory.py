@@ -4,6 +4,7 @@ from Equipment import Equipement
 from Equipment import Weapon
 from Equipment import Armor
 
+
 #same inventory for player and monster 
 class Inventory:
     def __init__(self):
@@ -15,15 +16,7 @@ class Inventory:
         self.items = {}
         self.weapon = None
         self.armor = {Armor.Part.HELMET.value : None, Armor.Part.CHESTPLATE.value : None,  Armor.Part.LEGGINGS.value : None, Armor.Part.BOOTS.value : None}
-        
-    def GetWeapon(self):
-        #get l'arme unique de l'entitée
-        self.weapon
-        
-    def GetArmor(self):
-        # renvoie exemple {"chestplate": chestplateTest, etc et renvoie none comme valeur ci vide }
-        return self.armor
-        
+                
     def GetItemQuantity(self, _item):
         #revoie l'item dans le dictionaire d'item avec ça quantité
         if _item in self.items:
@@ -38,7 +31,11 @@ class Inventory:
         if self.items[_item] <= 0:
             del self.items[_item]
         
-        
+    def Equip(self , _item):
+        if isinstance(_item, Equipement):
+            ...
+        else:
+            print("You can Equip only weapon or armor part")
     
     def AddItem(self, _item, _quantity):
         # ici nous pouron ajouter un item déja existant ou non a l'inventaire de l'entitée et ça quantité
@@ -62,6 +59,6 @@ class Inventory:
             
         print(f"\n{Equipement.Type.ARMOR.value:>10} :")
         for armor in self.armor:
-            if not self.weapon == None and isinstance(armor, Armor):
+            if not armor == None and isinstance(armor, Armor):
                 print(f"{armor.part:>15} : {armor.name}")
         
