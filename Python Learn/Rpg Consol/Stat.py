@@ -10,6 +10,7 @@ class Stat:
         _armor=0.0,
         _magicResistance=0.0,
         _criticalChance=0.0,
+        _criticalDamage = 0.0,
         _lifeSteal=0.0,
         _armorPenetration=0.0,
         _magicPenetration=0.0,
@@ -27,7 +28,7 @@ class Stat:
         self.magicResistance = _magicResistance
 
         self.criticalChance = _criticalChance
-        self.criticalDamage = 1.25
+        self.criticalDamage = _criticalDamage
 
         self.lifeSteal = _lifeSteal
 

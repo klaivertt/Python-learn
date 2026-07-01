@@ -13,8 +13,9 @@ class Player(Entity):
        self.vitality = 7
        self.luck = 7
        
-       self.baseStat = Stat(_health = 610, _healthRegeneration = 3.5,_maxMana = 280, _manaRegeneration = 7, _attackDamage = 59, _armor = 26, _magicResistance = 30)
-       self.statByLevel = Stat(_health = 101, _healthRegeneration = 0.55 _maxMana = 35, _manaRegeneration = 0.65, _attackDamage = 3.5, _armor = 4.6, _magicResistance = 1.3)
+       self.baseStat = Stat(_health = 610, _healthRegeneration = 3.5,_maxMana = 280, _manaRegeneration = 7, _attackDamage = 59, _armor = 26, _magicResistance = 30, criticalDamage = 1.25)
+       
+       self.statByLevel = Stat(_health = 101, _healthRegeneration = 0.55, _maxMana = 35, _manaRegeneration = 0.65, _attackDamage = 3.5, _armor = 4.6, _magicResistance = 1.3)
        
     def SetName(self):
         while True:
