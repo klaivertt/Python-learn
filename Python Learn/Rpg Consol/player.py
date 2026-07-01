@@ -46,8 +46,14 @@ class Player(Entity):
        
         choice = ""
         
-        Tools.ClearS()
+        
+        attributed = True
         while point > 0:
+            Tools.ClearS()
+            
+            if not attributed:
+                print(f"You can't attribute more than 15 to an ability")
+            
             self.DisplayAbility()
             
             while True:
@@ -73,7 +79,6 @@ class Player(Entity):
                     print("Please enter an valid attribute between '[S]trength', '[D]exterity', '[I]ntelligence','[V]itality', '[L]uck' ")
             
             attributed = True
-            
             if choice == "strength":
                 if self.strength < 15:
                     self.strength += 1
@@ -100,9 +105,7 @@ class Player(Entity):
                 else:
                     attributed = False
             
-            if not attributed:
-                print(f"You can't attribute more than 15 to an ability")
-            else :
+            if attributed:
                 print(f"1 point assigned to {choice}.")        
                 print(f"Point left to attribute {point}")
                 
