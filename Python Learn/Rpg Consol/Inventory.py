@@ -1,4 +1,5 @@
-import Stat
+from Stat import Stat
+from Item import Item 
 
 #same inventory for player and monster 
 class Inventory:
@@ -9,6 +10,9 @@ class Inventory:
         # et 4 morceau d'armur, tete, torse, jambe, pied
         #l'inventaire contiendra aussi un item "Gold" qui permetra de faire des echange avec le marchand
         self.weapon = None
+                
+        self.items = {}
+        self.armor = {}
     
     def CheckItemExists(self, _itemName):
         ...
@@ -22,10 +26,14 @@ class Inventory:
         # renvoie exemple {"chestplate": chestplateTest, etc et renvoie none comme valeur ci vide }
         ...
         
-    def GetItem(self, _itemName):
+    def GetItem(self, _item):
         #revoie l'item dans le dictionaire d'item avec ça quantité
         ...
     
-    def AddItem(self, _itemName, _quantity):
-        ...
+    def AddItem(self, _item, _quantity):
         # ici nous pouron ajouter un item déja existant ou non a l'inventaire de l'entitée et ça quantité
+        if _item in self.items:
+            self.items[_item] += _quantity
+        else:
+            self.items[_item] = _quantity
+            

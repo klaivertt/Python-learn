@@ -108,7 +108,7 @@ class Player(Entity):
         Tools.PrintSubTitle("Ability")
         
         print()
-        displayed = {"Strength" : self.strength,"Dexterity" : self.dexterity, "Intelligence" : self.intelligence,"Vitality": self.vitality, "Luck" : self.luck}
+        displayed = {"Strength" : self.strength, "Dexterity" : self.dexterity, "Intelligence" : self.intelligence, "Vitality": self.vitality, "Luck" : self.luck}
         
         for name in displayed:
             print(f"{name:>15} : {displayed[name]}")
