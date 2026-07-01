@@ -1,9 +1,11 @@
-from Stat import Stat
+import Tools
 from Item import Item 
+from Equipment import Equipement
+from Equipment import Weapon
+from Equipment import Armor
 
 #same inventory for player and monster 
 class Inventory:
-    ...
     def __init__(self):
         #l'inventaire peux contenir des item sans contraitre il est infinie
         # pour ce qui est des object un seul emplacement d'arme
@@ -12,7 +14,7 @@ class Inventory:
                 
         self.items = {}
         self.weapon = None
-        self.armor = {"helmet" : None, "chestplate" : None, "leggings" : None, "boots" : None}
+        self.armor = {Armor.Part.HELMET : None, Armor.Part.CHESTPLATE : None,  Armor.Part.LEGGINGS: None, Armor.Part.BOOTS : None}
         
     def GetWeapon(self):
         #get l'arme unique de l'entitée
@@ -44,4 +46,9 @@ class Inventory:
             self.items[_item] += _quantity
         else:
             self.items[_item] = _quantity
-            
+    
+    def DispayItems(self):
+        Tools.PrintSubTitle("Item")
+        
+        for item in self.items:
+            print(f"{item.name:>15} : {self.items[item]}")

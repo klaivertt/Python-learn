@@ -35,10 +35,10 @@ class Entity :
         self.baseStat += self.statByLevel
                
     def UpdateStat(self):
-        ...
         #prendre les stat de l'entier lier a sont level
         #ajouter les stat des armure et des arme
         #retourner les stat flat
+        ...
 
     def GetStat(self):
         ...

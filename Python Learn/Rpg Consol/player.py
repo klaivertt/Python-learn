@@ -46,8 +46,8 @@ class Player(Entity):
        
         choice = ""
         
+        Tools.ClearS()
         while point > 0:
-            Tools.ClearS()
             self.DisplayAbility()
             
             while True:
