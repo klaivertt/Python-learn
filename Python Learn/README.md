@@ -9,6 +9,5 @@
 04_Data_Structures/
 05_Files_Libraries/
 06_Projects/
-07_Advanced/
-08_Final_Boss/
+Rpg Consol/
 ```
