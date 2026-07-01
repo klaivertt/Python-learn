@@ -1,4 +1,5 @@
 from Entity import Entity
+from Stat import Stat
 
 XP_REQUIRED_BY_LEVEL = 30
 
@@ -11,7 +12,10 @@ class Player(Entity):
        self.intelligence = 7
        self.vitality = 7
        self.luck = 7
-    
+       
+       self.baseStat = Stat(_health = 610, _healthRegeneration = 3.5,_maxMana = 280, _manaRegeneration = 7, _attackDamage = 59, _armor = 26, _magicResistance = 30)
+       self.statByLevel = Stat(_health = 101, _healthRegeneration = 0.55 _maxMana = 35, _manaRegeneration = 0.65, _attackDamage = 3.5, _armor = 4.6, _magicResistance = 1.3)
+       
     def SetName(self):
         while True:
             try:
@@ -82,9 +86,15 @@ class Player(Entity):
             self.LevelUp()
         
     def LevelUp(self):
-        ...
         #appliquer des modification sur les level stat du player
-    
+        print(f"You've levelled up to level : {self.level} !!")
+        
+        print("You earn 1 attribute point")
+        self.StatisticalDistribution(1)
+        
+        self.AddBaseToStat()
+        
+            
     def IsLevelUp(self):
         ...
         #verifier si l'xp gagner > a 20+30*(x-1)^2

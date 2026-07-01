@@ -1,4 +1,4 @@
-import Stat
+from Stat import Stat
 import Tools
 
 #Max value for rpg stat
@@ -13,7 +13,9 @@ class Entity :
         self.xp = 0
         #Base stat for the player link to Level
         self.baseStat = Stat()
-                
+        
+        #Stat added by level
+        self.statByLevel = Stat()
         #this stat are used to update stat level stat + item stat
         self.currentStat = Stat()
         self.maxHealth = self.currentStat.health
@@ -25,6 +27,9 @@ class Entity :
         self.intelligence = 0
         self.vitality = 0
         self.luck = 0
+        
+    def AddBaseToStat(self):
+        self.baseStat += self.statByLevel
                
     def UpdateStat(self):
         ...

@@ -1,33 +1,35 @@
 
 class Stat:
-    def __init__(self):
-        # Health
-        self.health = 0
-        self.healthRegeneration = 0
+    def __init__( self, 
+        _health=0, 
+        _healthRegeneration = 0.0,
+        _maxMana=0,
+        _manaRegeneration=0.0,
+        _attackDamage=0.0,
+        _magicDamage = 0.0,
+        _armor=0.0,
+        _magicResistance=0.0,
+        _criticalChance=0.0,
+        _lifeSteal=0.0,
+        _armorPenetration=0.0,
+        _magicPenetration=0.0,
+    ):
+        self.health = _health
+        self.healthRegeneration = _healthRegeneration
 
-        # Mana
-        self.maxMana = 0
-        self.manaRegeneration = 0
+        self.maxMana = _maxMana
+        self.manaRegeneration = _manaRegeneration
 
-        # Damage
-        self.attackDamage = 0
-        self.attackSpeed = 0.0
+        self.attackDamage = _attackDamage
+        self.magicDamage = _magicDamage
 
-        # Armor
-        self.armor = 0
-        self.magicResistance = 0
+        self.armor = _armor
+        self.magicResistance = _magicResistance
 
-        # Critical damage
-        self.criticalChance = 0.0
-        self.criticalDamage = 0.0
+        self.criticalChance = _criticalChance
+        self.criticalDamage = 1.25
 
-        # life steal
-        self.lifeSteal = 0
+        self.lifeSteal = _lifeSteal
 
-        # Precision
-        self.accuracy = 0
-        self.dodge = 0
-
-        # Penetration
-        self.armorPenetration = 0
-        self.magicPenetration = 0
+        self.armorPenetration = _armorPenetration
+        self.magicPenetration = _magicPenetration
