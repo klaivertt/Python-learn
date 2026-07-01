@@ -52,3 +52,17 @@ class Inventory:
         
         for item in self.items:
             print(f"{item.name:>15} : {self.items[item]}")
+        
+        print("_"*25)
+            
+    def DisplayEquipement(self):
+        Tools.PrintSubTitle("Equipement")        
+        
+        print(f"{self.weapon.equipementType:>15} : {self.weapon.name}")
+        
+        print("-"*15)
+        print(f"{Equipement.Type.ARMOR:>10} :")
+        for armor in self.armor:
+            print(f"{armor.part:>15} : {armor.name}")
+        
+        print("_"*25)

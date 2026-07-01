@@ -2,7 +2,6 @@
 ## Structure
 
 ```text
-00_Tools/
 01_Basics/
 02_Conditions_Loops/
 03_Functions/
