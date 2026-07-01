@@ -30,7 +30,7 @@ class Armor(Equipement):
     class Part(Enum):
         HELMET = "Helmet"
         CHESTPLATE = "Chestplate"
-        LEGGINGS = "Meggings"
+        LEGGINGS = "Leggings"
         BOOTS = "Boots"
     
     def __init__(self, _name="", _description="", _price=0, _stat = None, _part = None):

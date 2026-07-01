@@ -1,6 +1,11 @@
+import Tools
+
 from Stat import Stat
 from Inventory import Inventory
-import Tools
+from Item import Item 
+from Equipment import Equipement
+from Equipment import Weapon
+from Equipment import Armor
 
 #Max value for rpg stat
 MAX_STAT = 20
@@ -31,18 +36,20 @@ class Entity :
         
         self.inventory = Inventory()
         
-    def AddBaseToStat(self):
-        self.baseStat += self.statByLevel
                
     def UpdateStat(self):
         #prendre les stat de l'entier lier a sont level
         #ajouter les stat des armure et des arme
         #retourner les stat flat
-        ...
-
-    def GetStat(self):
-        ...
         
+        if not self.inventory.weapon == None and isinstance(self.inventory.weapon, Weapon):
+            self.currentStat = self.baseStat + self.inventory.weapon.stat
+        for armor in self.inventory.armor:
+            if not armor == None and isinstance(armor, Armor):
+                self.currentStat + self.inventory.armor[armor.value].stat
+                
+        self.maxHealth = self.currentStat.health
+                    
     def IsDead(self):
         ...
     

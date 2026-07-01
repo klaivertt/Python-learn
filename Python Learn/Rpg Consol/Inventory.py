@@ -14,7 +14,7 @@ class Inventory:
                 
         self.items = {}
         self.weapon = None
-        self.armor = {Armor.Part.HELMET : None, Armor.Part.CHESTPLATE : None,  Armor.Part.LEGGINGS: None, Armor.Part.BOOTS : None}
+        self.armor = {Armor.Part.HELMET.value : None, Armor.Part.CHESTPLATE.value : None,  Armor.Part.LEGGINGS.value : None, Armor.Part.BOOTS.value : None}
         
     def GetWeapon(self):
         #get l'arme unique de l'entitée
@@ -53,16 +53,15 @@ class Inventory:
         for item in self.items:
             print(f"{item.name:>15} : {self.items[item]}")
         
-        print("_"*25)
             
     def DisplayEquipement(self):
         Tools.PrintSubTitle("Equipement")        
         
-        print(f"{self.weapon.equipementType:>15} : {self.weapon.name}")
-        
-        print("-"*15)
-        print(f"{Equipement.Type.ARMOR:>10} :")
+        if not self.weapon == None and isinstance(self.weapon, Weapon):
+            print(f"{Equipement.Type.WEAPON.value:>15} : {self.weapon.name}")
+            
+        print(f"\n{Equipement.Type.ARMOR.value:>10} :")
         for armor in self.armor:
-            print(f"{armor.part:>15} : {armor.name}")
+            if not self.weapon == None and isinstance(armor, Armor):
+                print(f"{armor.part:>15} : {armor.name}")
         
-        print("_"*25)

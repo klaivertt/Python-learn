@@ -140,6 +140,7 @@ class Player(Entity):
         
         self.xp -= self.GetRequiredXp()
         self.level += 1
+        self.baseStat += self.statByLevel
 
         
     def GetRequiredXp(self):
